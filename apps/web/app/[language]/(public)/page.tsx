@@ -111,7 +111,7 @@ export default async function ForStudentsPage() {
                                 <Link href={`/${lang}/grant-changes`} className={buttonVariants({
                                     className: cn("xl:size-10 justify-between items-center flex")
                                 })}>
-                                    <ArrowRightIcon className="text-white" />
+                                    <ArrowRightIcon className="" />
                                     <p className={"xl:hidden"}>Оценить</p>
                                 </Link>
                             </CardFooter>
@@ -135,7 +135,7 @@ export default async function ForStudentsPage() {
                             <Link href={`/${lang}/career-guidance`} className={buttonVariants({
                                 className: cn("xl:size-10 justify-between items-center flex")
                             })}>
-                                <ArrowRightIcon className="text-white" />
+                                <ArrowRightIcon className="" />
                                 <p className={"xl:hidden"}>Профориентация</p>
                             </Link>
                         </CardFooter>

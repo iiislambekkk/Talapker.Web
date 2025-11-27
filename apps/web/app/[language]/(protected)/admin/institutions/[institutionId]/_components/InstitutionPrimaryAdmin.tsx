@@ -70,7 +70,7 @@ const InstitutionPrimaryAdmin = () => {
                                             <span className="text-sm">{primaryAdmin.email}</span>
                                         </div>
 
-                                        <Badge variant="default" className="bg-primary text-primary-foreground px-4 py-1.5 gap-2">
+                                        <Badge variant="red" className="">
                                             <Shield className="w-4 h-4" />
                                             Primary Administrator
                                         </Badge>

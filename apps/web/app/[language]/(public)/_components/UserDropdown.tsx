@@ -21,6 +21,7 @@ import {signOut, useSession} from "next-auth/react";
 import {env} from "@/lib/env";
 import UserRoles from "@/Data/models/UserRoles";
 import {UserDto} from "@/Data/models/UserDto";
+import {IconSettings} from "@tabler/icons-react";
 
 interface IUser  {
     email: string;
@@ -72,6 +73,12 @@ export default function UserDropdown({user}: { user: IUser }) {
                         <Link href="/">
                             <HomeIcon size={16} className="opacity-60" aria-hidden="true" />
                             <span>Home</span>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href={env.NEXT_PUBLIC_BACKEND_URL+"/Identity/Account/Manage"}>
+                            <IconSettings size={16} className="opacity-60" aria-hidden="true" />
+                            <span>Account settings</span>
                         </Link>
                     </DropdownMenuItem>
                     {role.includes(UserRoles.SystemAdmin) && (

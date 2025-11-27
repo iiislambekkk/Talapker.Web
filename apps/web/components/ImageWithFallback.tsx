@@ -59,11 +59,11 @@ export function ImageWithFallback({
             {isLoading && (
                 <Skeleton
                     className={cn(
-                        "flex items-center justify-center bg-muted animate-pulse",
+                        "flex items-center justify-center bg-muted animate-pulse object-cover",
                         skeletonClassName
                     )}
                 >
-                    <Loader2 className="animate-spin w-4 h-4" />
+                    <Loader2 className="animate-spin size-1/4" />
                 </Skeleton>
             )}
         </>

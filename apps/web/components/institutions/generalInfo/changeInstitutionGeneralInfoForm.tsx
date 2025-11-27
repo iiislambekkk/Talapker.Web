@@ -90,7 +90,7 @@ export const ChangeInstitutionGeneralInfoForm = ({data} : {data: InstitutionAdmi
         <DrawerForm
             open={open}
             setOpen={setOpen}
-            trigger={<Button className={"size-12 px-2"}><PenIcon className={"size-6"}/></Button>}
+            trigger={<Button className={"h-12 px-2"}><PenIcon className={"size-6"}/> {t(LocalizationKeys.AdminDashBoard.UpdateInstitutionInfo)} </Button>}
             title={t(LocalizationKeys.AdminDashBoard.UpdateInstitutionInfo)}
             description={t(LocalizationKeys.AdminDashBoard.UpdateInstitutionInfoDescription)}
         >
@@ -176,7 +176,9 @@ export const ChangeInstitutionGeneralInfoForm = ({data} : {data: InstitutionAdmi
 
                 </FieldGroup>
 
-                <Button type="submit">{t(LocalizationKeys.AdminDashBoard.Update)}</Button>
+                <div className={"flex justify-end mb-10"}>
+                    <Button className={""} type="submit">{t(LocalizationKeys.AdminDashBoard.Update)}</Button>
+                </div>
             </form>
         </DrawerForm>
     );

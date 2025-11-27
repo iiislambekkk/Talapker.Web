@@ -11,7 +11,7 @@ import {ImageWithFallback} from "@/components/ImageWithFallback";
 import {generateS3UrlFromKey} from "@/lib/generateS3UrlFromKey";
 import {Badge} from "@workspace/ui/components/badge";
 import ChangeInstitutionGeneralInfoForm
-    from "@/app/[language]/(protected)/admin/institutions/[institutionId]/_components/changeInstitutionGeneralInfoForm";
+    from "@/components/institutions/generalInfo/changeInstitutionGeneralInfoForm";
 import {Skeleton} from "@workspace/ui/components/skeleton";
 import {Card, CardContent} from "@workspace/ui/components/card";
 import {Building2, Hash} from "lucide-react";
@@ -19,50 +19,52 @@ import {Building2, Hash} from "lucide-react";
 const InstitutionForAdminHeader = () => {
     const {institutionId} = useParams() as {institutionId: string};
     const t = useTranslations()
-    const { data: institution, error, refetch, status } = useQuery(institutionForAdminQueryOptions(institutionId))
+    const { data: institution, status } = useQuery(institutionForAdminQueryOptions(institutionId))
     const [lang] = useLang()
 
     console.log(institution)
 
     if (status == "success") {
         return (
-            <Card className="w-full overflow-hidden border-border/50 bg-gradient-to-br from-card to-card/80">
-                <CardContent className="p-8">
-                    <div className="flex flex-col lg:flex-row items-center gap-8">
-                        <div className="relative group">
-                            <div className="w-full h-full xl:max-w-[300px] rounded-2xl bg-card shadow-lg overflow-hidden transition-all duration-300 group-hover:shadow-xl">
+            <Card className="w-full overflow-hidden border-border/50 bg-card">
+                <CardContent className="p-4 sm:p-6 lg:p-8">
+                    <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8">
+                        <div className="relative group w-full lg:w-auto">
+                            <div className="w-full max-w-[280px] mx-auto lg:max-w-[300px] rounded-2xl bg-card shadow-lg overflow-hidden transition-all duration-300 group-hover:shadow-xl">
                                 <ImageWithFallback
                                     src={generateS3UrlFromKey(institution.logoKey)}
                                     alt={`${institution.name} logo`}
                                     width={160}
                                     height={160}
                                     imageClassName="w-full h-full object-cover aspect-square transition-transform duration-300"
-                                    skeletonClassName="w-full h-full"
+                                    skeletonClassName="aspect-square w-[300px] h-auto"
                                 />
                             </div>
                         </div>
 
-                        <div className="flex-1 flex flex-col gap-6 text-center lg:text-left">
+                        <div className="flex-1 flex flex-col gap-4 sm:gap-6 text-center lg:text-left w-full">
                             <div className="space-y-2">
-                                <h1 className="text-3xl sm:text-4xl xl:text-5xl font-bold text-foreground leading-tight">
+                                <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-foreground leading-tight">
                                     {institution.name[lang]}
                                 </h1>
                             </div>
 
-                            <div className="flex flex-col sm:flex-row items-center gap-4 flex-wrap justify-center lg:justify-start">
-                                <Badge variant="secondary" className="px-4 py-2 text-sm font-semibold gap-2">
-                                    <Building2 className="w-4 h-4" />
-                                    {institution.type}
-                                </Badge>
-
-                                {institution.nationalCode != null && (
-                                    <Badge variant="outline" className="px-4 py-2 text-sm font-semibold gap-2">
-                                        <Hash className="w-4 h-4" />
-                                        {t(LocalizationKeys.AdminDashBoard.NationalCode)}: {institution.nationalCode}
+                            <div className="flex flex-col gap-3 sm:gap-4">
+                                <div className="flex xs:flex-row items-center gap-2 sm:gap-3 flex-wrap justify-center lg:justify-start">
+                                    <Badge variant="yellow" className="px-3 sm:px-4 py-1.5 sm:py-2 text-sm font-semibold gap-2">
+                                        <Building2 className="w-4 h-4" />
+                                        {institution.type}
                                     </Badge>
-                                )}
 
-                                <div className="lg:ml-auto">
+                                    {institution.nationalCode != null && (
+                                        <Badge variant="indigo" className="px-3 sm:px-4 py-1.5 sm:py-2 text-sm font-semibold gap-2">
+                                            <Hash className="w-4 h-4" />
+                                            {t(LocalizationKeys.AdminDashBoard.NationalCode)}: {institution.nationalCode}
+                                        </Badge>
+                                    )}
+                                </div>
+
+                                <div className="w-full">
                                     <ChangeInstitutionGeneralInfoForm data={institution} />
                                 </div>
                             </div>

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import InstitutionForAdminHeader
-    from "@/app/[language]/(protected)/admin/institutions/[institutionId]/_components/InstitutionForAdminHeader";
+    from "@/components/institutions/generalInfo/InstitutionForAdminHeader";
 import InstitutionPrimaryAdmin
     from "@/app/[language]/(protected)/admin/institutions/[institutionId]/_components/InstitutionPrimaryAdmin";
 
