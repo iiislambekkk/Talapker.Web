@@ -54,6 +54,7 @@ const MenuBar = ({editor} : IMenuBarProps) => {
                     <Tooltip>
                         <TooltipTrigger asChild={true}>
                             <Toggle
+                                disabled={!editor.isEditable}
                                 size={"sm"}
                                 pressed={editor.isActive("bold")}
                                 onPressedChange={() => editor.chain().toggleBold().run()}
@@ -72,6 +73,7 @@ const MenuBar = ({editor} : IMenuBarProps) => {
                     <Tooltip>
                         <TooltipTrigger asChild={true}>
                             <Toggle
+                                disabled={!editor.isEditable}
                                 size={"sm"}
                                 pressed={editor.isActive("italic")}
                                 onPressedChange={() => editor.chain().toggleItalic().run()}
@@ -90,6 +92,7 @@ const MenuBar = ({editor} : IMenuBarProps) => {
                     <Tooltip>
                         <TooltipTrigger asChild={true}>
                             <Toggle
+                                disabled={!editor.isEditable}
                                 size={"sm"}
                                 pressed={editor.isActive("strike")}
                                 onPressedChange={() => editor.chain().toggleStrike().run()}
@@ -108,6 +111,7 @@ const MenuBar = ({editor} : IMenuBarProps) => {
                     <Tooltip>
                         <TooltipTrigger asChild={true}>
                             <Toggle
+                                disabled={!editor.isEditable}
                                 size={"sm"}
                                 pressed={editor.isActive("heading", {level: 1})}
                                 onPressedChange={() => editor.chain().toggleHeading({level: 1}).run()}
@@ -126,6 +130,7 @@ const MenuBar = ({editor} : IMenuBarProps) => {
                     <Tooltip>
                         <TooltipTrigger asChild={true}>
                             <Toggle
+                                disabled={!editor.isEditable}
                                 size={"sm"}
                                 pressed={editor.isActive("heading", {level: 2})}
                                 onPressedChange={() => editor.chain().toggleHeading({level: 2}).run()}
@@ -144,6 +149,7 @@ const MenuBar = ({editor} : IMenuBarProps) => {
                     <Tooltip>
                         <TooltipTrigger asChild={true}>
                             <Toggle
+                                disabled={!editor.isEditable}
                                 size={"sm"}
                                 pressed={editor.isActive("heading", {level: 3})}
                                 onPressedChange={() => editor.chain().toggleHeading({level: 3}).run()}
@@ -162,6 +168,7 @@ const MenuBar = ({editor} : IMenuBarProps) => {
                     <Tooltip>
                         <TooltipTrigger asChild={true}>
                             <Toggle
+                                disabled={!editor.isEditable}
                                 size={"sm"}
                                 pressed={editor.isActive("bulletList")}
                                 onPressedChange={() => editor.chain().toggleBulletList().run()}
@@ -180,6 +187,7 @@ const MenuBar = ({editor} : IMenuBarProps) => {
                     <Tooltip>
                         <TooltipTrigger asChild={true}>
                             <Toggle
+                                disabled={!editor.isEditable}
                                 size={"sm"}
                                 pressed={editor.isActive("orderedList")}
                                 onPressedChange={() => editor.chain().toggleOrderedList().run()}
@@ -204,6 +212,7 @@ const MenuBar = ({editor} : IMenuBarProps) => {
                     <Tooltip>
                         <TooltipTrigger asChild={true}>
                             <Toggle
+                                disabled={!editor.isEditable}
                                 size={"sm"}
                                 pressed={editor.isActive({textAlign: "left"})}
                                 onPressedChange={() => editor.chain().setTextAlign("left").run()}
@@ -222,6 +231,7 @@ const MenuBar = ({editor} : IMenuBarProps) => {
                     <Tooltip>
                         <TooltipTrigger asChild={true}>
                             <Toggle
+                                disabled={!editor.isEditable}
                                 size={"sm"}
                                 pressed={editor.isActive({textAlign: "center"})}
                                 onPressedChange={() => editor.chain().setTextAlign("center").run()}
@@ -240,6 +250,7 @@ const MenuBar = ({editor} : IMenuBarProps) => {
                     <Tooltip>
                         <TooltipTrigger asChild={true}>
                             <Toggle
+                                disabled={!editor.isEditable}
                                 size={"sm"}
                                 pressed={editor.isActive({textAlign: "right"})}
                                 onPressedChange={() => editor.chain().setTextAlign("right").run()}
@@ -271,7 +282,7 @@ const MenuBar = ({editor} : IMenuBarProps) => {
                                onClick={() => {
                                    editor.chain().focus().undo().run()
                                }}
-                               disabled={!editor.can().undo()}
+                               disabled={!editor.isEditable || !editor.can().redo()}
                            >
                                <UndoIcon />
                            </Button>
@@ -290,7 +301,7 @@ const MenuBar = ({editor} : IMenuBarProps) => {
                                 onClick={() => {
                                     editor.chain().focus().redo().run()
                                 }}
-                                disabled={!editor.can().redo()}
+                                disabled={!editor.isEditable || !editor.can().redo()}
                             >
                                 <RedoIcon />
                             </Button>

@@ -46,8 +46,44 @@
     "AssignPrimeAdmin": "Бас әкімшіні тағайындау",
     "AssignPrimeAdminDescription": "Оқу орнына бас әкімшіні тағайындау. Бұл пайдаланушы оқу орнының негізгі менеджері болады және барлық басқару мүмкіндіктеріне ие болады.",
     "Assign": "Тағайындау",
-    "UniversityWithSameNationalCodeAlreadyExist": "Бұл кодты оқу орны бұрыннан бар.",
-    "Users": "Қолданушылар"
+    "UniversityWithSameNationalCodeAlreadyExist": "University with that code already exists.",
+    "Users": "Users",
+
+    "Description": "Сипаттама",
+    "UpdateDescription": "Сипаттаманы жаңарту",
+    "DescriptionUpdated": "Сипаттама сәтті жаңартылды",
+    "TranslateDescription": "Сипаттаманы аудару",
+    "ImproveDescription": "Сипаттаманы жақсарту"
+  },
+
+  "Actions": {
+    "Edit": "Өңдеу",
+    "Save": "Сақтау",
+    "Cancel": "Бас тарту",
+    "Close": "Жабу",
+    "Translate": "Аудару",
+    "TranslateAndImprove": "Аудару және жақсарту",
+    "Translating": "Аударылуда..."
+  },
+
+  "Messages": {
+    "Translation": {
+      "Success": "Сипаттама сәтті аударылды!",
+      "Error": "Сипаттаманы аудару сәтсіз аяқталды",
+      "Loading": "Сипаттама аударылуда. Күте тұрыңыз.",
+      "Improving": "Аударманы жақсарту. Күте тұрыңыз."
+    },
+    "Description": {
+      "UpdateSuccess": "Сипаттама сәтті жаңартылды",
+      "UpdateError": "Сипаттаманы жаңарту сәтсіз аяқталды"
+    }
+  },
+
+
+  "Errors": {
+    "UnknownError": "Белгісіз қате орын алды",
+    "DescriptionUpdateFailed": "Сипаттаманы жаңарту сәтсіз аяқталды",
+    "TranslationFailed": "Аудару сәтсіз аяқталды"
   },
 
   "InstitutionAdminMenu": {
@@ -79,9 +115,7 @@
     "Departments": "Кафедралар",
     "EducationPrograms": "Білім беру бағдарламалары",
     "Posts": "Жазбалар"
-  },
-
-  "Errors": {
-    "UnknownError": "Белгісіз қате орын алды"
   }
+
+
 }

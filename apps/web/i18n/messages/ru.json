@@ -47,7 +47,41 @@
     "AssignPrimeAdminDescription": "Назначить главного администратора учебному заведению. Этот пользователь будет основным менеджером учебного заведения со всеми правами управления.",
     "Assign": "Назначить",
     "UniversityWithSameNationalCodeAlreadyExist": "Учебное заведение с таким кодом уже существует.",
-    "Users": "Пользователи"
+    "Users": "Пользователи",
+
+    "Description": "Описание",
+    "UpdateDescription": "Обновить описание",
+    "DescriptionUpdated": "Описание успешно обновлено",
+    "TranslateDescription": "Перевести описание",
+    "ImproveDescription": "Улучшить описание"
+  },
+
+  "Actions": {
+    "Edit": "Редактировать",
+    "Save": "Сохранить",
+    "Cancel": "Отмена",
+    "Close": "Закрыть",
+    "Translate": "Перевести",
+    "TranslateAndImprove": "Перевести и улучшить",
+    "Translating": "Переводится..."
+  },
+
+  "Messages": {
+    "Translation": {
+      "Success": "Описание успешно переведено!",
+      "Error": "Не удалось перевести описание",
+      "Loading": "Описание переводится. Пожалуйста, подождите.",
+      "Improving": "Улучшение перевода. Пожалуйста, подождите."
+    },
+    "Description": {
+      "UpdateSuccess": "Описание успешно обновлено",
+      "UpdateError": "Не удалось обновить описание"
+    }
+  },
+  "Errors": {
+    "UnknownError": "Произошла неизвестная ошибка",
+    "DescriptionUpdateFailed": "Не удалось обновить описание",
+    "TranslationFailed": "Перевод не удался"
   },
 
   "InstitutionAdminMenu": {
@@ -79,10 +113,5 @@
     "Departments": "Кафедры",
     "EducationPrograms": "Образовательные программы",
     "Posts": "Публикации"
-  },
-
-
-  "Errors": {
-    "UnknownError": "Произошла неизвестная ошибка"
   }
 }

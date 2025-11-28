@@ -54,11 +54,46 @@
         Assign: "AdminDashBoard.Assign",
         UniversityWithSameNationalCodeAlreadyExist: "AdminDashBoard.UniversityWithSameNationalCodeAlreadyExist",
         PrimeAdminAssigned: "AdminDashBoard.PrimeAdminAssigned",
-        Users: "AdminDashBoard.Users"
+        Users: "AdminDashBoard.Users",
+
+        Description: "AdminDashBoard.Description",
+        UpdateDescription: "AdminDashBoard.UpdateDescription",
+        DescriptionUpdated: "AdminDashBoard.DescriptionUpdated",
+        TranslateDescription: "AdminDashBoard.TranslateDescription",
+        ImproveDescription: "AdminDashBoard.ImproveDescription",
     },
+
+
+    Actions: {
+        Edit: "Actions.Edit",
+        Save: "Actions.Save",
+        Cancel: "Actions.Cancel",
+        Close: "Actions.Close",
+        Translate: "Actions.Translate",
+        TranslateAndImprove: "Actions.TranslateAndImprove",
+        Translating: "Actions.Translating",
+    },
+
+    Messages: {
+        Translation: {
+            Success: "Messages.Translation.Success",
+            Error: "Messages.Translation.Error",
+            Loading: "Messages.Translation.Loading",
+            Improving: "Messages.Translation.Improving",
+        },
+        Description: {
+            UpdateSuccess: "Messages.Description.UpdateSuccess",
+            UpdateError: "Messages.Description.UpdateError",
+        }
+    },
+
     Errors: {
-        UnknownError: "Errors.UnknownError"
+        UnknownError: "Errors.UnknownError",
+        // Add description specific errors
+        DescriptionUpdateFailed: "Errors.DescriptionUpdateFailed",
+        TranslationFailed: "Errors.TranslationFailed",
     },
+
 
     InstitutionAdminMenu: {
         Analytics: "InstitutionAdminMenu.Analytics",

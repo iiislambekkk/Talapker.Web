@@ -6,7 +6,7 @@ import {generateHTML} from "@tiptap/html"
 import {cn} from "@workspace/ui/lib/utils";
 import {JSONContent} from "@tiptap/react";
 
-const RenderDescription = ({description} : {description?: string}) => {
+const InstitutionDescriptionView = ({description} : {description?: string}) => {
 
     let json = "{}" as any
     try {
@@ -35,4 +35,4 @@ const RenderDescription = ({description} : {description?: string}) => {
     );
 };
 
-export default RenderDescription;
+export default InstitutionDescriptionView;

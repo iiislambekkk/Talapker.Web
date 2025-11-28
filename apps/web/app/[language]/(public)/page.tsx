@@ -58,8 +58,7 @@ export default async function ForStudentsPage() {
                         </div>
 
                         <CardContent className={"flex flex-col lg:flex-row justify-end items-end gap-2 ml-5"}>
-                            <Link href={`/${lang}/grant-changes`} className={buttonVariants({
-                            })}>
+                            <Link href={`/${lang}/grant-changes`} className={buttonVariants({})}>
                                 <School2/> ВУЗы
                             </Link>
 

@@ -60,7 +60,41 @@
     "Assign": "Assign",
 
     "UniversityWithSameNationalCodeAlreadyExist": "University with that code already exists.",
-    "Users": "Users"
+    "Users": "Users",
+    "Description": "Description",
+    "UpdateDescription": "Update Description",
+    "DescriptionUpdated": "Description updated successfully",
+    "TranslateDescription": "Translate Description",
+    "ImproveDescription": "Improve Description"
+  },
+
+  "Actions": {
+    "Edit": "Edit",
+    "Save": "Save",
+    "Cancel": "Cancel",
+    "Close": "Close",
+    "Translate": "Translate",
+    "TranslateAndImprove": "Translate & Improve",
+    "Translating": "Translating..."
+  },
+
+  "Messages": {
+    "Translation": {
+      "Success": "Description translated successfully!",
+      "Error": "Failed to translate description",
+      "Loading": "Translating description. Please wait.",
+      "Improving": "Improving translation. Please wait."
+    },
+    "Description": {
+      "UpdateSuccess": "Description updated successfully",
+      "UpdateError": "Failed to update description"
+    }
+  },
+
+  "Errors": {
+    "UnknownError": "UnknownError ocurred",
+    "DescriptionUpdateFailed": "Failed to update description",
+    "TranslationFailed": "Translation failed"
   },
 
   "InstitutionAdminMenu": {
@@ -92,9 +126,5 @@
     "Departments": "Departments",
     "EducationPrograms": "Education Programs",
     "Posts": "Posts"
-  },
-
-  "Errors": {
-    "UnknownError": "Unknown error occurred"
   }
 }

@@ -13,7 +13,7 @@ import {Badge} from "@workspace/ui/components/badge";
 import ChangeInstitutionGeneralInfoForm
     from "@/components/institutions/generalInfo/changeInstitutionGeneralInfoForm";
 import {Skeleton} from "@workspace/ui/components/skeleton";
-import {Card, CardContent} from "@workspace/ui/components/card";
+import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@workspace/ui/components/card";
 import {Building2, Hash} from "lucide-react";
 
 const InstitutionForAdminHeader = () => {
@@ -26,9 +26,9 @@ const InstitutionForAdminHeader = () => {
 
     if (status == "success") {
         return (
-            <Card className="w-full overflow-hidden border-border/50 bg-card">
-                <CardContent className="p-4 sm:p-6 lg:p-8">
-                    <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8">
+            <Card className="w-full overflow-hidden bg-transparent border-0 p-0 mt-10">
+                <CardContent className="p-0">
+                    <div className="flex flex-col lg:flex-row  items-start gap-6 lg:gap-8">
                         <div className="relative group w-full lg:w-auto">
                             <div className="w-full max-w-[280px] mx-auto lg:max-w-[300px] rounded-2xl bg-card shadow-lg overflow-hidden transition-all duration-300 group-hover:shadow-xl">
                                 <ImageWithFallback
@@ -42,33 +42,92 @@ const InstitutionForAdminHeader = () => {
                             </div>
                         </div>
 
-                        <div className="flex-1 flex flex-col gap-4 sm:gap-6 text-center lg:text-left w-full">
-                            <div className="space-y-2">
-                                <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-foreground leading-tight">
-                                    {institution.name[lang]}
-                                </h1>
-                            </div>
+                        <div className={"flex flex-col xl:flex-row justify-between items-center xl:items-start gap-10"}>
+                            <div className="flex-1 flex flex-col gap-4 sm:gap-6 text-center lg:text-left w-full">
+                                <div className="space-y-2">
+                                    <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-foreground leading-tight">
+                                        {institution.name[lang]}
+                                    </h1>
+                                </div>
 
-                            <div className="flex flex-col gap-3 sm:gap-4">
-                                <div className="flex xs:flex-row items-center gap-2 sm:gap-3 flex-wrap justify-center lg:justify-start">
-                                    <Badge variant="yellow" className="px-3 sm:px-4 py-1.5 sm:py-2 text-sm font-semibold gap-2">
-                                        <Building2 className="w-4 h-4" />
-                                        {institution.type}
-                                    </Badge>
-
-                                    {institution.nationalCode != null && (
-                                        <Badge variant="indigo" className="px-3 sm:px-4 py-1.5 sm:py-2 text-sm font-semibold gap-2">
-                                            <Hash className="w-4 h-4" />
-                                            {t(LocalizationKeys.AdminDashBoard.NationalCode)}: {institution.nationalCode}
+                                <div className="flex flex-col gap-3 sm:gap-4">
+                                    <div className="flex xs:flex-row items-center gap-2 sm:gap-3 flex-wrap justify-center lg:justify-start">
+                                        <Badge variant="yellow" className="px-3 sm:px-4 py-1.5 sm:py-2 text-sm font-semibold gap-2">
+                                            <Building2 className="w-4 h-4" />
+                                            {institution.type}
                                         </Badge>
-                                    )}
-                                </div>
 
-                                <div className="w-full">
-                                    <ChangeInstitutionGeneralInfoForm data={institution} />
+                                        {institution.nationalCode != null && (
+                                            <Badge variant="indigo" className="px-3 sm:px-4 py-1.5 sm:py-2 text-sm font-semibold gap-2">
+                                                <Hash className="w-4 h-4" />
+                                                {t(LocalizationKeys.AdminDashBoard.NationalCode)}: {institution.nationalCode}
+                                            </Badge>
+                                        )}
+
+                                        <ChangeInstitutionGeneralInfoForm data={institution} />
+                                    </div>
                                 </div>
                             </div>
+
+                            <div className={"grid grid-cols-2 gap-5 w-full xl:w-[400px]"}>
+                                <div className={"bg-accent flex flex-col justify-center items-start p-4 rounded-2xl"}>
+                                    <p className={"font-semibold"}>
+                                        Has Housing:
+                                    </p>
+                                    <p>
+                                        {institution?.hasHousing ? "Yes" : "No"}
+                                    </p>
+                                </div>
+
+                                <div className={"bg-accent flex flex-col justify-center items-start p-4 rounded-2xl"}>
+                                    <p className={"font-semibold"}>
+                                        Has Housing:
+                                    </p>
+                                    <p>
+                                        {institution?.hasHousing ? "Yes" : "No"}
+                                    </p>
+                                </div>
+
+                                <div className={"bg-accent flex flex-col justify-center items-start p-4 rounded-2xl"}>
+                                    <p className={"font-semibold"}>
+                                        Has Housing:
+                                    </p>
+                                    <p>
+                                        {institution?.hasHousing ? "Yes" : "No"}
+                                    </p>
+                                </div>
+
+                                <div className={"bg-accent flex flex-col justify-center items-start p-4 rounded-2xl"}>
+                                    <p className={"font-semibold"}>
+                                        Has Housing:
+                                    </p>
+                                    <p>
+                                        {institution?.hasHousing ? "Yes" : "No"}
+                                    </p>
+                                </div>
+
+                                <div className={"bg-accent flex flex-col justify-center items-start p-4 rounded-2xl"}>
+                                    <p className={"font-semibold"}>
+                                        Has Housing:
+                                    </p>
+                                    <p>
+                                        {institution?.hasHousing ? "Yes" : "No"}
+                                    </p>
+                                </div>
+
+                                <div className={"bg-accent flex flex-col justify-center items-start p-4 rounded-2xl"}>
+                                    <p className={"font-semibold"}>
+                                        Has Housing:
+                                    </p>
+                                    <p>
+                                        {institution?.hasHousing ? "Yes" : "No"}
+                                    </p>
+                                </div>
+
+                            </div>
+
                         </div>
+
                     </div>
                 </CardContent>
             </Card>

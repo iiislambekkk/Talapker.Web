@@ -36,6 +36,7 @@ import {InstitutionAdminDto} from "@/Data/models/InstitutionAdminDto";
 import LocalizationKeys from "@/i18n/messages/LocalizationKeys";
 import {PenIcon} from "lucide-react";
 import {handleApiError} from "@/lib/handleApiError";
+import {badgeVariants} from "@workspace/ui/components/badge";
 
 export const ChangeInstitutionGeneralInfoForm = ({data} : {data: InstitutionAdminDto}) => {
     const t = useTranslations();
@@ -90,7 +91,7 @@ export const ChangeInstitutionGeneralInfoForm = ({data} : {data: InstitutionAdmi
         <DrawerForm
             open={open}
             setOpen={setOpen}
-            trigger={<Button className={"h-12 px-2"}><PenIcon className={"size-6"}/> {t(LocalizationKeys.AdminDashBoard.UpdateInstitutionInfo)} </Button>}
+            trigger={<Button variant={"blue"}><PenIcon className={"size-4"}/> {t(LocalizationKeys.AdminDashBoard.UpdateInstitutionInfo)} </Button>}
             title={t(LocalizationKeys.AdminDashBoard.UpdateInstitutionInfo)}
             description={t(LocalizationKeys.AdminDashBoard.UpdateInstitutionInfoDescription)}
         >

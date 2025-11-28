@@ -5,6 +5,7 @@ import StarterKit from '@tiptap/starter-kit'
 import MenuBar from "@/components/richTextEditor/MenuBar";
 import {cn} from "@workspace/ui/lib/utils";
 import TextAlign from "@tiptap/extension-text-align";
+import {useEffect} from "react";
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 const RichTextEditor = ({field} : {field: any}) => {
@@ -32,8 +33,18 @@ const RichTextEditor = ({field} : {field: any}) => {
             field.onChange(JSON.stringify(editor.getJSON()))
         },
 
-        content: field.value ? JSON.parse(field.value) : "<p>Hello world!</p>"
+        content: field.value ? JSON.parse(field.value) : "<p>Hello world!</p>",
+        editable: !field.disabled
     })
+
+    useEffect(() => {
+        if (editor && field.value) {
+            const currentContent = JSON.stringify(editor.getJSON());
+            if (currentContent !== field.value) {
+                editor.commands.setContent(JSON.parse(field.value));
+            }
+        }
+    }, [field.value, editor]);
 
     return (
         <div className={"w-full max-h-[80vh] overflow-y-auto"}>
