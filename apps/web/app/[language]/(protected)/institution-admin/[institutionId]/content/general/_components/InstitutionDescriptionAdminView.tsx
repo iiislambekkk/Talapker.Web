@@ -14,7 +14,7 @@ const InstitutionDescriptionAdminView = ({institution} : {institution: Instituti
     return (
         <>
             <div className={"flex justify-between"}>
-                <h2 className={"text-4xl"}>Description</h2>
+                <h2 className={"text-4xl font-semibold"}>Description</h2>
             </div>
 
             <InstitutionDescriptionView description={institution.description[lang]}/>

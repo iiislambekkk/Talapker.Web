@@ -24,6 +24,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip"
+import {useEffect} from "react";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -157,13 +158,25 @@ function Sidebar({
   collapsible = "offcanvas",
   className,
   children,
+  sidebarName,
   ...props
 }: React.ComponentProps<"div"> & {
   side?: "left" | "right"
   variant?: "sidebar" | "floating" | "inset"
   collapsible?: "offcanvas" | "icon" | "none"
+    sidebarName: string
 }) {
-  const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+  const { isMobile, state, openMobile, setOpenMobile, setOpen } = useSidebar()
+
+    useEffect(() => {
+        var isOpen = localStorage.getItem(sidebarName)
+        if (isOpen === "true") {
+            setOpen(true)
+        }
+        else if (isOpen === "false") {
+            setOpen(false)
+        }
+    }, [])
 
   if (collapsible === "none") {
     return (
@@ -256,9 +269,10 @@ function Sidebar({
 function SidebarTrigger({
   className,
   onClick,
+  sidebarName,
   ...props
-}: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar()
+}: React.ComponentProps<typeof Button> & {sidebarName: string}) {
+  const { toggleSidebar, open } = useSidebar()
 
   return (
     <Button
@@ -269,6 +283,7 @@ function SidebarTrigger({
       className={cn("size-7", className)}
       onClick={(event) => {
         onClick?.(event)
+      localStorage.setItem(sidebarName, open ? "false" : "true")
         toggleSidebar()
       }}
       {...props}

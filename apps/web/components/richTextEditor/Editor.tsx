@@ -41,7 +41,18 @@ const RichTextEditor = ({field} : {field: any}) => {
         if (editor && field.value) {
             const currentContent = JSON.stringify(editor.getJSON());
             if (currentContent !== field.value) {
-                editor.commands.setContent(JSON.parse(field.value));
+                // Add gradient background transition
+                editor.view.dom.style.background = 'linear-gradient(45deg, #f0f9ff, #e0f2fe)';
+                editor.view.dom.style.transition = 'background 1s ease';
+
+                setTimeout(() => {
+                    editor.commands.setContent(JSON.parse(field.value));
+
+                    // Gradually return to normal
+                    setTimeout(() => {
+                        editor.view.dom.style.background = 'transparent';
+                    }, 800);
+                }, 150);
             }
         }
     }, [field.value, editor]);

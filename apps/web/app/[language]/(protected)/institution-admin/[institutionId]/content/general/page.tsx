@@ -5,7 +5,6 @@ import InstitutionForAdminHeader
 import {useParams} from "next/navigation";
 import InstitutionDescriptionAdminView
     from "@/app/[language]/(protected)/institution-admin/[institutionId]/content/general/_components/InstitutionDescriptionAdminView";
-import InstitutionAdvantagesView from "@/components/institutions/InstitutionAdvantagesView";
 import {useQuery} from "@tanstack/react-query";
 import {institutionForAdminQueryOptions} from "@/lib/tanstackQuery/options/institutionForAdminQueryOptions";
 import InstitutionAdvantagesAdminView

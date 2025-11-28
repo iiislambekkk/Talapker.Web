@@ -15,6 +15,15 @@ import ChangeInstitutionGeneralInfoForm
 import {Skeleton} from "@workspace/ui/components/skeleton";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@workspace/ui/components/card";
 import {Building2, Hash} from "lucide-react";
+import {
+    GraduationCap,
+    Home,
+    Target,
+    DollarSign,
+    Shield,
+    Users
+} from 'lucide-react';
+
 
 const InstitutionForAdminHeader = () => {
     const {institutionId} = useParams() as {institutionId: string};
@@ -70,58 +79,76 @@ const InstitutionForAdminHeader = () => {
                             </div>
 
                             <div className={"grid grid-cols-2 gap-5 w-full xl:w-[400px]"}>
-                                <div className={"bg-accent flex flex-col justify-center items-start p-4 rounded-2xl"}>
-                                    <p className={"font-semibold"}>
-                                        Has Housing:
-                                    </p>
-                                    <p>
-                                        {institution?.hasHousing ? "Yes" : "No"}
-                                    </p>
+                                <div className={"bg-accent flex items-start gap-2 p-4 rounded-2xl"}>
+                                    <GraduationCap className="w-5 h-5" />
+                                    <div className={"flex flex-col"}>
+                                        <p className={"text-xs"}>
+                                            Специальности:
+                                        </p>
+                                        <p className="mt-1">
+                                            {institution?.minCostPerYear || "N/A"}
+                                        </p>
+                                    </div>
                                 </div>
 
-                                <div className={"bg-accent flex flex-col justify-center items-start p-4 rounded-2xl"}>
-                                    <p className={"font-semibold"}>
-                                        Has Housing:
-                                    </p>
-                                    <p>
-                                        {institution?.hasHousing ? "Yes" : "No"}
-                                    </p>
+                                <div className={"bg-accent flex items-start gap-2 p-4 rounded-2xl"}>
+                                    <Home className="w-5 h-5" />
+                                    <div className={"flex flex-col"}>
+                                        <p className={"text-xs"}>
+                                            Общежитие:
+                                        </p>
+                                        <p className="mt-1">
+                                            {institution?.hasHousing ? "Yes" : "No"}
+                                        </p>
+                                    </div>
                                 </div>
 
-                                <div className={"bg-accent flex flex-col justify-center items-start p-4 rounded-2xl"}>
-                                    <p className={"font-semibold"}>
-                                        Has Housing:
-                                    </p>
-                                    <p>
-                                        {institution?.hasHousing ? "Yes" : "No"}
-                                    </p>
+                                <div className={"bg-accent flex items-start gap-2 p-4 rounded-2xl"}>
+                                    <Target className="w-5 h-5" />
+                                    <div className={"flex flex-col"}>
+                                        <p className={"text-xs"}>
+                                            Пороговый балл:
+                                        </p>
+                                        <p className="mt-1">
+                                            {"N/A"}
+                                        </p>
+                                    </div>
                                 </div>
 
-                                <div className={"bg-accent flex flex-col justify-center items-start p-4 rounded-2xl"}>
-                                    <p className={"font-semibold"}>
-                                        Has Housing:
-                                    </p>
-                                    <p>
-                                        {institution?.hasHousing ? "Yes" : "No"}
-                                    </p>
+                                <div className={"bg-accent flex items-start gap-2 p-4 rounded-2xl"}>
+                                    <DollarSign className="w-5 h-5" />
+                                    <div className={"flex flex-col"}>
+                                        <p className={"text-xs"}>
+                                            Стоимость от:
+                                        </p>
+                                        <p className="mt-1">
+                                            {institution?.minCostPerYear || "N/A"}
+                                        </p>
+                                    </div>
                                 </div>
 
-                                <div className={"bg-accent flex flex-col justify-center items-start p-4 rounded-2xl"}>
-                                    <p className={"font-semibold"}>
-                                        Has Housing:
-                                    </p>
-                                    <p>
-                                        {institution?.hasHousing ? "Yes" : "No"}
-                                    </p>
+                                <div className={"bg-accent flex items-start gap-2 p-4 rounded-2xl"}>
+                                    <Shield className="w-5 h-5" />
+                                    <div className={"flex flex-col"}>
+                                        <p className={"text-xs"}>
+                                            Военная кафедра:
+                                        </p>
+                                        <p className="mt-1">
+                                            {institution?.hasMilitaryDepartment ? "Yes" : "No"}
+                                        </p>
+                                    </div>
                                 </div>
 
-                                <div className={"bg-accent flex flex-col justify-center items-start p-4 rounded-2xl"}>
-                                    <p className={"font-semibold"}>
-                                        Has Housing:
-                                    </p>
-                                    <p>
-                                        {institution?.hasHousing ? "Yes" : "No"}
-                                    </p>
+                                <div className={"bg-accent flex items-start gap-2 p-4 rounded-2xl"}>
+                                    <Users className="w-5 h-5" />
+                                    <div className={"flex flex-col"}>
+                                        <p className={"text-xs"}>
+                                            Студентов:
+                                        </p>
+                                        <p className="mt-1">
+                                            {institution?.studentsCount || "2500"}
+                                        </p>
+                                    </div>
                                 </div>
 
                             </div>

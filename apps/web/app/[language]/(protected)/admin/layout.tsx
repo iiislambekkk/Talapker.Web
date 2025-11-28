@@ -26,7 +26,7 @@ const AdminLayout = async ({children} : {children: React.ReactNode}) => {
             }
           suppressHydrationWarning
         >
-            <AdminSidebar/>
+            <AdminSidebar sidebarName="admin"/>
             <SidebarInset className={""}>
                 <SiteHeader />
                 <div className="flex flex-1 flex-col">

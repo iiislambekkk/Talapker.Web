@@ -30,7 +30,9 @@ const InstitutionAdminLayout = async ({children} : {children: React.ReactNode}) 
             }
           suppressHydrationWarning
         >
-            <InstitutionAdminSidebar/>
+            <InstitutionAdminSidebar
+                sidebarName={"institutionAdmin"}
+            />
             <SidebarInset className={""}>
                 <InstitutionAdminSiteHeader />
                 <div className="flex flex-1 flex-col">

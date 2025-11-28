@@ -28,7 +28,7 @@ export function InstitutionAdminNavMain({
     }[]
 }) {
 
-    const { state, toggleSidebar } = useSidebar()
+    const { state, toggleSidebar, setOpen } = useSidebar()
     const expandIfCollapsed = () => {
         if (state === "collapsed") toggleSidebar()
     }
