@@ -61,7 +61,7 @@ function Button({
   const Comp = asChild ? Slot : "button"
 
     if (!variant || variant === "default") {
-        variant = "indigo"
+        variant = "blue"
     }
 
   return (
