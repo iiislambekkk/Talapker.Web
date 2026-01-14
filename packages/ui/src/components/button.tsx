@@ -20,7 +20,6 @@ const buttonVariants = cva(
               "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
           link: "text-primary underline-offset-4 hover:underline",
 
-          // Color variants matching badge styles
           red: "border border-transparent bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900 focus-visible:ring-red-500/20 dark:focus-visible:ring-red-500/40",
           green: "border border-transparent bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-900 focus-visible:ring-green-500/20 dark:focus-visible:ring-green-500/40",
           blue: "border border-transparent bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900 focus-visible:ring-blue-500/20 dark:focus-visible:ring-blue-500/40",
