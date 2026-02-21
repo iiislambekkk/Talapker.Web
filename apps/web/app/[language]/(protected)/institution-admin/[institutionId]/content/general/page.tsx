@@ -20,7 +20,7 @@ const Page = () => {
             <>
                 <InstitutionForAdminHeader/>
                 <InstitutionDescriptionAdminView institution={institution}/>
-                <InstitutionAdvantagesAdminView institution={institution} />
+                {/*<InstitutionAdvantagesAdminView institution={institution} />*/}
             </>
         );
     }

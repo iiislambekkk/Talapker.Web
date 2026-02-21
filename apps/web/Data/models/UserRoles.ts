@@ -1,7 +1,7 @@
 ﻿const UserRoles = {
     SystemAdmin: "SystemAdmin",
     TenantAdmin: "TenantAdmin",
-    Ambassador: "Ambassador",
+    TenantAmbassador: "TenantAmbassador",
 }
 
  export default UserRoles;

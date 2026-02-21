@@ -1,8 +1,5 @@
 ﻿import { queryOptions } from '@tanstack/react-query'
-import {env} from "@/lib/env";
-import {InstitutionShortDto} from "@/Data/models/InstitutionShortDto";
 import getAccessToken from "@/lib/auth/getAccessToken";
-import {InstitutionAdminDto} from "@/Data/models/InstitutionAdminDto";
 import {createApi} from "@/lib/axios";
 import {InstitutionDto} from "@/Data/models/InstitutionDto";
 
@@ -17,5 +14,5 @@ export const institutionByIdOptions = (id: string) =>
 
             return res.data;
         }
-    });
+});
 

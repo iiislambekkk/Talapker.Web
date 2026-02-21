@@ -31,7 +31,7 @@ export function DrawerForm({ trigger, title, description, children, open, setOpe
         >
             <DrawerTrigger asChild>{trigger}</DrawerTrigger>
 
-            <DrawerContent className="">
+            <DrawerContent className={!isMobile ? "w-[600px] max-w-none" : ""}>
                 <DrawerHeader>
                     <DrawerTitle>{title}</DrawerTitle>
                     {description && (
@@ -39,7 +39,7 @@ export function DrawerForm({ trigger, title, description, children, open, setOpe
                     )}
                 </DrawerHeader>
 
-                <div className="overflow-y-auto px-4">
+                <div className="overflow-y-auto px-4 pb-12">
                     {children}
                 </div>
             </DrawerContent>

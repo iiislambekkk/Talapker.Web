@@ -33,7 +33,7 @@ interface IUser  {
 
 export default function UserDropdown({user}: { user: IUser }) {
 
-    const {email, name, image, role, tenantId} = user
+    const {email, name, image, role="", tenantId} = user
 
     const handleSignOut =  async () => {
         const endSessionUrl = `${env.NEXT_PUBLIC_BACKEND_URL}/connect/endsession?post_logout_redirect_uri=${encodeURIComponent(env.NEXT_PUBLIC_NEXTAUTH_URL)}/`;
