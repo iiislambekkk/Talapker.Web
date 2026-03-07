@@ -12,7 +12,7 @@ declare module "next-auth" {
             email: string;
             image: string;
             name: string;
-            role: string[];
+            role: string;
             tenantId?: string;
         };
         error?: string;

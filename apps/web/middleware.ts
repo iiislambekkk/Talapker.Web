@@ -42,7 +42,6 @@ export function middleware(req: NextRequest) {
 
 export const config = {
     matcher: [
-        // Игнорируем статические ассеты, API (включая next-auth), и служебные пути
-        "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|img/|fonts/).*)",
+        "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|img/|fonts/|firebase-messaging-sw\\.js|img).*)",
     ],
 };

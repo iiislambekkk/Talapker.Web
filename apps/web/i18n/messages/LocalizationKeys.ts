@@ -109,6 +109,10 @@
         AdminUsers: "InstitutionAdminMenu.AdminUsers",
         Settings: "InstitutionAdminMenu.Settings",
 
+        AI: "InstitutionAdminMenu.AI",
+        AI_General: "InstitutionAdminMenu.AI_General",
+        AI_Telegram: "InstitutionAdminMenu.Telegram",
+
         // Submenu items
         Engagement: "InstitutionAdminMenu.Engagement",
         Prospect: "InstitutionAdminMenu.Prospect",

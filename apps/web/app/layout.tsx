@@ -4,6 +4,7 @@ import "@workspace/ui/globals.css"
 import { Providers } from "@/components/providers"
 import {NextIntlClientProvider} from "next-intl";
 import ToasterProvider from "@/components/ToasterProvider";
+import Head from "next/head";
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -22,6 +23,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <Head>
+          <link rel="manifest" href="/manifest.json" />
+          <link rel="icon" href="/img/logo.svg" />
+          <meta name="theme-color" content="#0d6efd" />
+      </Head>
       <body
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >

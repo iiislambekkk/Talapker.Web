@@ -32,6 +32,7 @@ interface ChatMessagesProps {
     loadingHistoryLabel: string;
     loadPreviousLabel: string;
     typingLabel: string;
+    lang: "kk" | "ru" | "en";
 }
 
 export const ChatMessages = ({
@@ -54,6 +55,7 @@ export const ChatMessages = ({
                                  loadingHistoryLabel,
                                  loadPreviousLabel,
                                  typingLabel,
+                                 lang
                              }: ChatMessagesProps) => {
     const botAvatarProps = {
         logoUrl: institutionLogoUrl,
@@ -111,7 +113,7 @@ export const ChatMessages = ({
                                         "rounded-2xl px-3 py-2",
                                         msg.isUser ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
                                     )}>
-                                        <MessageContent content={msg.content} isUser={msg.isUser} />
+                                        <MessageContent lang={lang} content={msg.content} isUser={msg.isUser} />
                                     </div>
                                     <div className={cn(
                                         "flex items-center gap-1 text-[10px] text-muted-foreground",
@@ -133,7 +135,7 @@ export const ChatMessages = ({
                                 <div className="space-y-1">
                                     <div className="rounded-2xl px-3 py-2 bg-muted text-foreground">
                                         <div className="relative">
-                                            <MessageContent content={response} isUser={false} />
+                                            <MessageContent lang={lang} content={response} isUser={false} />
                                             {isStreaming && (
                                                 <span className="inline-block w-1 h-3 ml-0.5 bg-primary animate-pulse align-middle" />
                                             )}

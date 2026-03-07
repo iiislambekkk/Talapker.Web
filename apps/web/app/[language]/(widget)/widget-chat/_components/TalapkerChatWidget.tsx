@@ -194,6 +194,7 @@ export const TalapkerChatWidget = ({
                     institutionFallback={institutionFallback}
                     loadingHistoryLabel={tr('loadingHistory')}
                     loadPreviousLabel={tr('loadPrevious')}
+                    lang={lang}
                     typingLabel={tr('typing')}
                 />
 

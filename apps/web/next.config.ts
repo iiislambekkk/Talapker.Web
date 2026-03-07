@@ -1,7 +1,22 @@
-import {NextConfig} from 'next';
-import createNextIntlPlugin from 'next-intl/plugin';
+const createNextIntlPlugin = require('next-intl/plugin');
+const withPWA = require('next-pwa')({
+    dest: "public",
+    register: true,
+    skipWaiting: true,
+    disable: process.env.NODE_ENV === 'development',
+    exclude: []
+});
 
-const nextConfig: NextConfig = {};
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
+    images: {
+        domains: ['pub-50614374e3ae4c0d88c3543f2f875fce.r2.dev']
+    }
+};
 
 const withNextIntl = createNextIntlPlugin();
-export default withNextIntl(nextConfig);
+
+module.exports = withPWA(withNextIntl(nextConfig));

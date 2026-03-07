@@ -1,6 +1,6 @@
 ﻿import { queryOptions } from "@tanstack/react-query";
 import { createApi } from "@/lib/axios";
-import {EducationProgram, EducationProgramDto} from "@/Data/models/Faculty";
+import {EducationProgramDto} from "@/Data/models/Faculty";
 
 export const educationProgramsQueryOptions = (institutionId: string, facultyId?: string | null) => queryOptions({
     queryKey: ['education-programs', institutionId, facultyId],

@@ -15,6 +15,8 @@ import {Avatar, AvatarFallback, AvatarImage} from "@workspace/ui/components/avat
 import {Badge} from "@workspace/ui/components/badge";
 import {generateS3UrlFromKey} from "@/lib/generateS3UrlFromKey";
 import {User, Mail, Shield} from "lucide-react";
+import DeleteInstitutionAdminRoleForm
+    from "@/app/[language]/(protected)/admin/institutions/[institutionId]/_components/DeleteInstitutionAdminRoleForm";
 
 const InstitutionPrimaryAdmin = () => {
     const {institutionId} = useParams() as {institutionId: string};
@@ -75,6 +77,14 @@ const InstitutionPrimaryAdmin = () => {
                                             Primary Administrator
                                         </Badge>
                                     </div>
+                                </div>
+
+                                <div className="flex-shrink-0">
+                                    <DeleteInstitutionAdminRoleForm
+                                        institutionId={institutionId}
+                                        userId={primaryAdmin.id}
+                                        adminName={`${primaryAdmin.firstName} ${primaryAdmin.lastName}`}
+                                    />
                                 </div>
                             </div>
                         </CardContent>

@@ -19,6 +19,7 @@ import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { getQueryClient } from "@/lib/tanstackQuery/getQueryClient";
 import { useLang } from "@/hooks/useLang";
+import { logger } from "@/lib/logger";
 
 interface DeleteEducationProgramDialogProps {
     programId: string;
@@ -40,12 +41,14 @@ export const DeleteEducationProgramDialog = ({
     const handleDelete = async () => {
         const apiCall = async () => {
             try {
+                logger.log("[DeleteProgram] Deleting program:", programId);
                 const api = createApi();
 
                 await api.delete(`/api/education-programs/${programId}`, {
                     headers: { Authorization: `Bearer ${session?.accessToken}` }
                 });
 
+                logger.log("[DeleteProgram] Successfully deleted program:", programId);
                 toast.success(
                     lang === "ru" ? "Программа успешно удалена!" :
                         lang === "kk" ? "Бағдарлама сәтті жойылды!" :
@@ -55,6 +58,7 @@ export const DeleteEducationProgramDialog = ({
                 setOpen(false);
                 await queryClient.invalidateQueries({ queryKey: ['education-programs', institutionId] });
             } catch (error: any) {
+                logger.error("[DeleteProgram] Failed to delete program:", programId, error);
                 toast.error(
                     error.message ||
                     (lang === "ru" ? "Ошибка при удалении" :
@@ -73,12 +77,8 @@ export const DeleteEducationProgramDialog = ({
     };
 
     const getDescription = () => {
-        if (lang === "ru") {
-            return `Вы уверены, что хотите удалить программу "${programName}"? Это действие нельзя отменить.`;
-        }
-        if (lang === "kk") {
-            return `Сіз "${programName}" бағдарламасын жойғыңыз келетініне сенімдісіз бе? Бұл әрекетті кері қайтару мүмкін емес.`;
-        }
+        if (lang === "ru") return `Вы уверены, что хотите удалить программу "${programName}"? Это действие нельзя отменить.`;
+        if (lang === "kk") return `Сіз "${programName}" бағдарламасын жойғыңыз келетініне сенімдісіз бе? Бұл әрекетті кері қайтару мүмкін емес.`;
         return `Are you sure you want to delete "${programName}"? This action cannot be undone.`;
     };
 
@@ -103,7 +103,7 @@ export const DeleteEducationProgramDialog = ({
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogTrigger asChild>
-                <Button variant="ghost" size="sm" className={"w-full justify-start p-0"}>
+                <Button variant="red" size="sm" className="w-full justify-start p-0">
                     <Trash2 className="size-4 mr-2" />
                     {lang === "ru" ? "Удалить" : lang === "kk" ? "Жою" : "Delete"}
                 </Button>
@@ -111,20 +111,12 @@ export const DeleteEducationProgramDialog = ({
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>{getTitle()}</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        {getDescription()}
-                    </AlertDialogDescription>
+                    <AlertDialogDescription>{getDescription()}</AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel disabled={isPending}>
-                        {getCancelText()}
-                    </AlertDialogCancel>
+                    <AlertDialogCancel disabled={isPending}>{getCancelText()}</AlertDialogCancel>
                     <AlertDialogAction asChild>
-                        <Button
-                            variant="destructive"
-                            onClick={handleDelete}
-                            disabled={isPending}
-                        >
+                        <Button variant="destructive" onClick={handleDelete} disabled={isPending}>
                             {isPending ? (
                                 <>
                                     <Loader2 className="size-4 mr-2 animate-spin" />

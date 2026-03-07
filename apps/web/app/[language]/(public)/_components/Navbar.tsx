@@ -13,7 +13,7 @@ import {signIn, useSession} from "next-auth/react";
 import {useLang} from "@/hooks/useLang";
 import {useIsMobile} from "@workspace/ui/hooks/use-mobile";
 import Image from "next/image";
-import Logo from "@/public/logo.svg";
+import Logo from "@/public/img/logo.svg";
 import {useTranslations} from "next-intl";
 import {ThemeToggle} from "@workspace/ui/components/ThemeToggle";
 import {ChangeLangButton} from "@/components/ChangeLangButton";

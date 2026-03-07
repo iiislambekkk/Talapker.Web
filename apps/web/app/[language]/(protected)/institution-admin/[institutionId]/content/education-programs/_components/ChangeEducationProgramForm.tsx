@@ -202,12 +202,10 @@ export const ChangeEducationProgramForm = ({ program, institutionId, faculties }
         const convertedLanguages = convertToClientLanguages(program.languages);
         const convertedStudyForm = convertToClientStudyForm(program.studyForm);
 
-        console.log('Converted languages:', convertedLanguages);
-        console.log('Converted studyForm:', convertedStudyForm);
 
         return {
-            facultyId: program.facultyId ?? "",
-            educationGroupId: program.educationGroupId ?? "",
+            facultyId: program.faculty?.id ?? "",
+            educationGroupId: program.educationGroup?.id ?? "",
             nameKk: program.name?.kk || "",
             nameRu: program.name?.ru || "",
             nameEn: program.name?.en || "",
@@ -344,6 +342,7 @@ export const ChangeEducationProgramForm = ({ program, institutionId, faculties }
                 setSearchQuery("");
                 setRawText("");
                 await queryClient.invalidateQueries({ queryKey: ['education-programs', institutionId] });
+                await queryClient.invalidateQueries({ queryKey: ["education-program", program.id] });
             } catch (error: any) {
                 console.error('Submit error:', error);
                 toast.error(error.message || "Қате шықты");
@@ -365,7 +364,7 @@ export const ChangeEducationProgramForm = ({ program, institutionId, faculties }
         <DrawerForm
             open={open}
             setOpen={setOpen}
-            trigger={<Button variant="ghost" size="sm" className={"w-full justify-start p-0"}><PenIcon className="size-4" />Өңдеу</Button>}
+            trigger={<Button variant="indigo" size="sm" className={"w-full justify-start p-0"}><PenIcon className="size-4" />Өңдеу</Button>}
             title="Білім бағдарламасын өңдеу"
             description={`${program.name[lang] || program.name.ru} - бағдарламасын өңдеу`}
         >

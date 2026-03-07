@@ -3,8 +3,10 @@
 import {useEffect} from "react";
 import {signIn, useSession} from "next-auth/react";
 
+
 const RedirectToSignInOnSessionError = () => {
     const {data: session} = useSession()
+
 
     useEffect(() => {
         console.log(session)

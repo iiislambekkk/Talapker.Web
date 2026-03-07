@@ -1,6 +1,7 @@
-﻿import {LocalizedText} from "@/Data/models/LocalizedText";
+﻿import { LocalizedText } from "@/Data/models/LocalizedText";
 
 // ===== ENUMS =====
+
 export enum GrantCompetitionType {
     General = "General",
     Rural = "Rural"
@@ -12,75 +13,71 @@ export enum Degree {
     Doctor = "Doctor"
 }
 
+export enum Language {
+    Kazakh = 0,
+    Russian = 1,
+    English = 2
+}
+
+export type StudyForm = "FullTime" | "PartTime" | "Evening" | "Distance";
+
 // ===== UNT =====
-export interface UntSubject {
+
+export interface UntSubjectDto {
     id: string;
-    seedId?: number | null;
     name: LocalizedText;
 }
 
-export interface UntPair {
+export interface UntPairDto {
     id: string;
-    seedId?: number | null;
-    firstSubjectId: string;
-    secondSubjectId: string;
-    firstSubject?: UntSubject;
-    secondSubject?: UntSubject;
-    educationGroups?: EducationGroup[];
+    firstSubject: UntSubjectDto;
+    secondSubject: UntSubjectDto;
 }
 
 // ===== GRANT =====
-export interface GrantCompetitionRecord {
+
+export interface GrantCompetitionRecordDto {
     score: number;
-    universityCode: number;
+    frequency: number;
 }
 
-export interface GrantCompetitionStatistic {
+export interface GrantCompetitionStatisticDto {
     id: string;
     year: number;
     competitionType: GrantCompetitionType;
-    educationGroupId: string;
-    educationGroup?: EducationGroup;
-    records: GrantCompetitionRecord[];
     minScore: number;
+    totalGrants: number;
+    records: GrantCompetitionRecordDto[];
 }
 
 // ===== EDUCATION HIERARCHY =====
-export interface EducationDirection {
-    id: string;
-    name: LocalizedText;
-    degree: Degree;
-    educationFields?: EducationField[];
-}
 
-export interface EducationField {
-    id: string;
-    nationalCode: string;
-    name: LocalizedText;
-    educationDirectionId: string;
-    educationDirection?: EducationDirection;
-    educationGroups?: EducationGroup[];
-}
-
-export interface EducationGroup {
+export interface EducationGroupDto {
     id: string;
     nationalCode: string;
     educationFieldId: string;
-    educationField?: EducationField;
     name: LocalizedText;
-    untSubjectsPairs: UntPair[];
-    grantCompetitionStatistics: GrantCompetitionStatistic[];
-    educationPrograms?: Faculty[];
+    untSubjectsPairs: UntPairDto[];
+    grantCompetitionStatistics: GrantCompetitionStatisticDto[];
 }
 
-export interface EducationProgram {
+// ===== FACULTY =====
+
+export interface FacultyDto {
     id: string;
     name: LocalizedText;
-    description: LocalizedText;
-    facultyId: string;
-    faculty?: Faculty; // если нужно будет включать
-    educationGroupId: string;
-    educationGroup?: EducationGroup; // если нужно будет включать
+    institutionId: string;
+    logoUrl?: string | null;
+    color: string;
+    educationPrograms: EducationProgramDto[];
+}
+
+// ===== EDUCATION PROGRAM =====
+
+export interface EducationProgramPriceDto {
+    year: number;
+    amount: number;
+    studyForm: StudyForm;
 }
 
 export interface EducationProgramDisciplineDto {
@@ -89,14 +86,6 @@ export interface EducationProgramDisciplineDto {
     credits: number;
     semesters: number[];
 }
-
-export interface EducationProgramPriceDto {
-    year: number;
-    amount: number;
-    studyForm: StudyForm;
-}
-
-export type StudyForm = 'FullTime' | 'PartTime' | 'Evening' | 'Distance';
 
 export interface EducationProgramDto {
     id: string;
@@ -108,48 +97,17 @@ export interface EducationProgramDto {
     code: string;
     studyForm: StudyForm;
     durationYears: number;
-    facultyId: string;
-    facultyName: LocalizedText;
-    educationGroupId: string;
-    educationGroupName: LocalizedText;
-    educationGroupCode: string;
     languages: Language[];
+    faculty?: FacultySlimDto | null;
+    educationGroup?: EducationGroupDto | null;
     prices: EducationProgramPriceDto[];
     disciplines: EducationProgramDisciplineDto[];
 }
 
-export enum Language {
-    Kazakh = 0,
-    Russian = 1,
-    English = 2
-}
-
-// ===== FACULTY & PROGRAMS =====
-export interface Faculty {
+export interface FacultySlimDto {
     id: string;
     name: LocalizedText;
     institutionId: string;
-    institution?: any; // или Institution тип
-    educationPrograms: Faculty[];
-    logoUrl: string
-    wallPaperUrl: string
-}
-
-export interface FacultyDto {
-    id: string;
-    name: LocalizedText;
-    institutionId: string;
-    educationPrograms: EducationProgramDto[];
     logoUrl?: string | null;
     wallPaperUrl?: string | null;
-}
-
-export interface Faculty {
-    id: string;
-    name: LocalizedText;
-    description: LocalizedText;
-    facultyId: string;
-    faculty?: Faculty;
-    educationGroupId: string;
-    educationGroup?: EducationGroup;
 }

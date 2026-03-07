@@ -37,7 +37,7 @@ import {
     Calendar,
     Palette,
     UserCog,
-    Settings
+    Settings, Stars
 } from 'lucide-react';
 import {
     InstitutionAdminNavSecondary
@@ -116,6 +116,20 @@ export function InstitutionAdminSidebar({ ...props }: React.ComponentProps<typeo
                     {
                         localizationKey: LocalizationKeys.InstitutionAdminMenu.Conversations,
                         url: `/institution-admin/${institutionId}/insights/conversations`
+                    }
+                ],
+            },
+            {
+                localizationKey: LocalizationKeys.InstitutionAdminMenu.AI,
+                icon: Stars,
+                items: [
+                    {
+                        localizationKey: LocalizationKeys.InstitutionAdminMenu.AI_General,
+                        url: `/institution-admin/${institutionId}/ai/manage`
+                    },
+                    {
+                        localizationKey: LocalizationKeys.InstitutionAdminMenu.AI_Telegram,
+                        url: `/institution-admin/${institutionId}/ai/telegram`
                     }
                 ],
             },

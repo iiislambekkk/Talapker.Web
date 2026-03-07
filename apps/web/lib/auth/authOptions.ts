@@ -1,8 +1,7 @@
 ﻿import axios from "axios";
-import {jwtDecode} from "jwt-decode";
-import {env} from "../env";
-import {generateS3UrlFromKey} from "@/lib/generateS3UrlFromKey";
-import {signIn, signOut} from "next-auth/react";
+import { jwtDecode } from "jwt-decode";
+import { env } from "../env";
+import { getSession } from "next-auth/react";
 
 type IdTokenType = {
     firstName: string
@@ -10,6 +9,40 @@ type IdTokenType = {
     email: string
     image: string
     role: string
+}
+
+async function refreshAccessToken(token: any) {
+    try {
+        const reqBody = new URLSearchParams({
+            client_id: "talapker-nextjs",
+            client_secret: "talapker-nextjs-secret",
+            grant_type: "refresh_token",
+            refresh_token: token.refresh_token
+        });
+
+        const response = await axios.post(
+            `${env.NEXT_PUBLIC_BACKEND_URL}/connect/token`,
+            reqBody,
+            { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+        );
+
+        const refreshed = response.data;
+        const decoded = jwtDecode(refreshed.access_token) as any;
+
+        console.log("[AUTH]: Successfully refreshed token!");
+
+        return {
+            ...token,
+            accessToken: refreshed.access_token,
+            idToken: refreshed.id_token,
+            refresh_token: refreshed.refresh_token ?? token.refresh_token,
+            expires_at: decoded.exp! * 1000,
+            error: undefined,
+        };
+    } catch (error) {
+        console.error("[AUTH]: Refresh token failed", error);
+        return { ...token, error: "RefreshAccessTokenError" };
+    }
 }
 
 export const authOptions = {
@@ -25,7 +58,7 @@ export const authOptions = {
             checks: ["pkce", "state"],
             clientSecret: "talapker-nextjs-secret",
             protection: "pkce",
-            profile(profile : any, tokens : any) {
+            profile(profile: any) {
                 return {
                     id: profile.sub,
                     sub: profile.sub,
@@ -34,95 +67,57 @@ export const authOptions = {
                     email: profile.email,
                     image: profile.image,
                     role: profile.role
-                }
+                };
             },
         }
     ],
 
     callbacks: {
-        async jwt({ token, account } : any) {
+        async jwt({ token, account, trigger, session }: any) {
+            // Initial sign in
             if (account) {
-
-                const decoded = jwtDecode(account.access_token);
-
-                token.accessToken = account.access_token ?? "";
-                token.idToken = account.id_token ?? "";
-                token.sub = account.sub ?? "";
-                token.role = account.role ?? "";
-                token.refresh_token = account.refresh_token;
-                token.expires_at = (decoded.exp ?? 1) * 1000;
+                const decoded = jwtDecode(account.access_token) as any;
+                return {
+                    accessToken: account.access_token,
+                    idToken: account.id_token,
+                    refresh_token: account.refresh_token,
+                    expires_at: decoded.exp * 1000,
+                };
             }
 
-            const now = Math.floor(Date.now());
-
-            if (token.expires_at && now < token.expires_at) return token;
-
-            console.log("[AUTH]: Refreshing token");
-
-            try {
-
-                const reqBody = new URLSearchParams({
-                    client_id: "talapker-nextjs",
-                    client_secret: "talapker-nextjs-secret",
-                    grant_type: "refresh_token",
-                    refresh_token: token.refresh_token
-                });
-
-                console.log(reqBody)
-                const response = await axios.post(
-                    `${env.NEXT_PUBLIC_BACKEND_URL}/connect/token`,
-                    reqBody,
-                    {
-                        headers: { "Content-Type": "application/x-www-form-urlencoded" }
-                    }
-                );
-
-
-                const refreshed = response.data;
-
-                if (response.status != 200) {
-                    token.error = "RefreshAccessTokenError"
-                    return token
-                }
-
-                console.log("[AUTH]: Successfully refreshed token!");
-
-                const decoded = jwtDecode(refreshed.access_token)
-
-                token.accessToken = refreshed.access_token;
-                token.idToken = refreshed.id_token;
-                token.refresh_token = refreshed.refresh_token;
-                token.expires_at = decoded.exp! * 1000
-
-                return token;
-            } catch (error) {
-                console.error("[AUTH]: Refresh token failed", error);
-                return { ...token, error: "RefreshAccessTokenError" };
+            // Force refresh triggered manually (SESSION_STALE interceptor)
+            if (trigger === "update" && session?.forceRefresh) {
+                console.log("[AUTH]: Force refreshing token due to SESSION_STALE");
+                return refreshAccessToken(token);
             }
+
+            // Token still valid
+            if (Date.now() < token.expires_at) return token;
+
+            // Token expired — refresh normally
+            console.log("[AUTH]: Token expired, refreshing...");
+            return refreshAccessToken(token);
         },
 
-        async session({ session, token } : any) {
-            if (!token.accessToken || !token.idToken) {
-                return session;
-            }
+        async session({ session, token }: any) {
+            if (!token.accessToken || !token.idToken) return session;
 
             if (token.error) {
                 session.error = token.error;
             }
 
-            const accessTokendecoded : {sub: string; tenantId?: string} = jwtDecode(token.accessToken)
-            const idTokenDecoded : IdTokenType = jwtDecode(token.idToken)
+            const accessTokenDecoded: { sub: string; tenantId?: string } = jwtDecode(token.accessToken);
+            const idTokenDecoded: IdTokenType = jwtDecode(token.idToken);
 
-            console.log(idTokenDecoded)
             session.user = {
-                sub: accessTokendecoded.sub,
+                sub: accessTokenDecoded.sub,
                 firstName: idTokenDecoded.firstName ?? "",
                 lastName: idTokenDecoded.lastName ?? "",
                 email: idTokenDecoded.email ?? "",
                 image: idTokenDecoded.image,
                 name: `${idTokenDecoded.firstName ?? ""} ${idTokenDecoded.lastName ?? ""}`.trim(),
                 role: idTokenDecoded.role,
-                tenantId: accessTokendecoded.tenantId ?? undefined,
+                tenantId: accessTokenDecoded.tenantId ?? undefined,
             };
 
             session.accessToken = token.accessToken;
@@ -134,6 +129,6 @@ export const authOptions = {
     },
 
     session: {
-        strategy: 'jwt',
+        strategy: "jwt",
     }
-}
+};

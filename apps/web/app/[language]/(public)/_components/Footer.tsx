@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from "next/link";
-import Logo from "@/public/logo.svg"
+import Logo from "@/public/img/logo.svg"
 import Image from "next/image";
 import {Loader2} from "lucide-react";
 import {ThemeToggle} from "@workspace/ui/components/ThemeToggle";

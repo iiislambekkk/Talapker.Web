@@ -1,0 +1,17 @@
+﻿{
+  "name": "Talapker",
+  "short_name": "Talapker",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "gcm_sender_id": "829651728804",
+  "gcm_user_visible_only": true
+}

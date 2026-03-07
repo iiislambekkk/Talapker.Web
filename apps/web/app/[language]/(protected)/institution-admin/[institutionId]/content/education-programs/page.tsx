@@ -38,17 +38,15 @@ import {
 import {
     educationProgramsQueryOptions
 } from "@/app/[language]/(protected)/institution-admin/[institutionId]/content/education-programs/_components/educationProgramsQueryOptions";
-import {EducationProgram, EducationProgramDto, Faculty, FacultyDto} from "@/Data/models/Faculty";
 import {Button} from "@workspace/ui/components/button";
 import CreateEducationProgramForm
     from "@/app/[language]/(protected)/institution-admin/[institutionId]/content/education-programs/_components/CreateEducationProgramForm";
-import {LocalizedText} from "@/Data/models/LocalizedText";
 import {LanguageType} from "@/lib/lang/LanguageType";
 import ChangeEducationProgramForm
     from "@/app/[language]/(protected)/institution-admin/[institutionId]/content/education-programs/_components/ChangeEducationProgramForm";
 import DeleteEducationProgramDialog
     from "@/app/[language]/(protected)/institution-admin/[institutionId]/content/education-programs/_components/DeleteEducationProgramDialog";
-import Link from "next/link";
+import {EducationProgramDto, FacultyDto} from "@/Data/models/Faculty";
 
 const Page = () => {
     const { institutionId } = useParams() as { institutionId: string };
@@ -170,7 +168,7 @@ const Page = () => {
                                         {lang === "en" && "Faculties"}
                                     </p>
                                     <p className="text-2xl font-bold">
-                                        {new Set(programs.map(p => p.facultyId)).size}
+                                        {new Set(programs.map(p => p.faculty?.id)).size}
                                     </p>
                                 </div>
                             </div>
@@ -231,7 +229,7 @@ const ProgramCard = ({
     faculties: FacultyDto[];
     institutionId: string;
 }) => {
-    const faculty = faculties.find(f => f.id === program.facultyId);
+    const faculty = faculties.find(f => f.id === program.faculty?.id);
     const router = useRouter()
 
     return (
@@ -332,7 +330,7 @@ const ProgramCard = ({
                                 {lang === "kk" ? "Топ" : lang === "ru" ? "Группа" : "Group"}
                             </span>
                             <span className="text-sm font-semibold truncate w-full">
-                                {program.educationGroupName?.[lang] || program.educationGroupName?.ru}
+                                {program.educationGroup?.name?.[lang] || program.educationGroup?.name?.ru}
                             </span>
                         </div>
                     </div>

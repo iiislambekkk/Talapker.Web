@@ -114,8 +114,10 @@
     "General": "Жалпы",
     "Departments": "Факультеттер",
     "EducationPrograms": "Білім беру бағдарламалары",
-    "Posts": "Жазбалар"
+    "Posts": "Жазбалар",
+
+    "AI_General": "General",
+    "Telegram": "Telegram bot",
+    "AI": "ЖИ көмекші"
   }
-
-
 }

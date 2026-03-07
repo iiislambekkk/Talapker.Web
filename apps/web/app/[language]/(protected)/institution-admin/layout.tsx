@@ -16,7 +16,11 @@ const InstitutionAdminLayout = async ({children} : {children: React.ReactNode}) 
     // @ts-ignore
     const session = await getServerSession(authOptions)
 
-    if (!session || !session.user.role.includes(UserRoles.TenantAdmin)) {
+    if (!session) {
+        redirect("/not-admin")
+    }
+
+    if ((session.user.role != UserRoles.PrimaryTenantAdmin) && (session.user.role != UserRoles.TenantAdmin)) {
         redirect("/not-admin")
     }
 

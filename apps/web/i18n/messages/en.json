@@ -125,6 +125,10 @@
     "General": "General",
     "Departments": "Departments",
     "EducationPrograms": "Education Programs",
-    "Posts": "Posts"
+    "Posts": "Posts",
+
+    "AI_General": "General",
+    "Telegram": "Telegram bot",
+    "AI": "AI bot"
   }
 }
