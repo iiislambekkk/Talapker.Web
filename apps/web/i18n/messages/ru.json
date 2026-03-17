@@ -115,6 +115,14 @@
     "Posts": "Публикации",
     "AI_General": "Управление",
     "Telegram": "Телеграм бот",
-    "AI": "ИИ помощник"
+    "AI": "ИИ помощник",
+    "AI_Knowledge_Base": "База знаний"
+  },
+
+  "AmbassadorSidebarMenu": {
+    "Profile": "Профиль",
+    "Chats": "Чаты",
+    "Analytics": "Аналитика",
+    "Settings": "Настройки"
   }
 }

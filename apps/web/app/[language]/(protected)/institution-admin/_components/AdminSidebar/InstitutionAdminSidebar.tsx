@@ -62,7 +62,7 @@ export function InstitutionAdminSidebar({ ...props }: React.ComponentProps<typeo
             avatar: "/avatars/shadcn.jpg",
         },
         navMain:  [
-            {
+           /* {
                 localizationKey: LocalizationKeys.InstitutionAdminMenu.Analytics,
                 icon: SquareTerminal,
                 isActive: true,
@@ -80,7 +80,7 @@ export function InstitutionAdminSidebar({ ...props }: React.ComponentProps<typeo
                         url: `/institution-admin/${institutionId}/analytics/ambassador`
                     },
                 ],
-            },
+            },*/
             {
                 localizationKey: LocalizationKeys.InstitutionAdminMenu.Content,
                 icon: FileText,
@@ -105,7 +105,7 @@ export function InstitutionAdminSidebar({ ...props }: React.ComponentProps<typeo
                     },
                 ],
             },
-            {
+           /* {
                 localizationKey: LocalizationKeys.InstitutionAdminMenu.Insights,
                 icon: Brain,
                 items: [
@@ -118,7 +118,7 @@ export function InstitutionAdminSidebar({ ...props }: React.ComponentProps<typeo
                         url: `/institution-admin/${institutionId}/insights/conversations`
                     }
                 ],
-            },
+            },*/
             {
                 localizationKey: LocalizationKeys.InstitutionAdminMenu.AI,
                 icon: Stars,
@@ -130,10 +130,14 @@ export function InstitutionAdminSidebar({ ...props }: React.ComponentProps<typeo
                     {
                         localizationKey: LocalizationKeys.InstitutionAdminMenu.AI_Telegram,
                         url: `/institution-admin/${institutionId}/ai/telegram`
+                    },
+                    {
+                        localizationKey: LocalizationKeys.InstitutionAdminMenu.AI_Knowledge_Base,
+                        url: `/institution-admin/${institutionId}/ai/knowledge-base`
                     }
                 ],
             },
-            {
+           /* {
                 localizationKey: LocalizationKeys.InstitutionAdminMenu.Conversations,
                 icon: MessageSquare,
                 items: [
@@ -150,7 +154,7 @@ export function InstitutionAdminSidebar({ ...props }: React.ComponentProps<typeo
                         url: `/institution-admin/${institutionId}/conversations/outbox`
                     }
                 ],
-            },
+            },*/
             {
                 localizationKey: LocalizationKeys.InstitutionAdminMenu.Ambassadors,
                 icon: Users,
@@ -183,7 +187,7 @@ export function InstitutionAdminSidebar({ ...props }: React.ComponentProps<typeo
                     }
                 ],
             },
-            {
+           /* {
                 localizationKey: LocalizationKeys.InstitutionAdminMenu.Moderation,
                 icon: Shield,
                 url: `/institution-admin/${institutionId}/moderation`
@@ -192,13 +196,13 @@ export function InstitutionAdminSidebar({ ...props }: React.ComponentProps<typeo
                 localizationKey: LocalizationKeys.InstitutionAdminMenu.Community,
                 icon: Users2,
                 url: `/institution-admin/${institutionId}/community`
-            },
+            },*/
             {
                 localizationKey: LocalizationKeys.InstitutionAdminMenu.Events,
                 icon: Calendar,
                 url: `/institution-admin/${institutionId}/events`
             },
-            {
+            /*{
                 localizationKey: LocalizationKeys.InstitutionAdminMenu.Customization,
                 icon: Palette,
                 items: [
@@ -215,8 +219,8 @@ export function InstitutionAdminSidebar({ ...props }: React.ComponentProps<typeo
                         url: `/institution-admin/${institutionId}/customization/features`
                     }
                 ],
-            },
-            {
+            },*/
+            /*{
                 localizationKey: LocalizationKeys.InstitutionAdminMenu.AdminUsers,
                 icon: UserCog,
                 url: `/institution-admin/${institutionId}/admins`
@@ -225,7 +229,7 @@ export function InstitutionAdminSidebar({ ...props }: React.ComponentProps<typeo
                 localizationKey: LocalizationKeys.InstitutionAdminMenu.Settings,
                 icon: Settings,
                 url: `/institution-admin/${institutionId}/settings`
-            }
+            }*/
         ],
         navClouds: [
             {

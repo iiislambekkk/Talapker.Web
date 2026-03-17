@@ -112,6 +112,7 @@
         AI: "InstitutionAdminMenu.AI",
         AI_General: "InstitutionAdminMenu.AI_General",
         AI_Telegram: "InstitutionAdminMenu.Telegram",
+        AI_Knowledge_Base: "InstitutionAdminMenu.AI_Knowledge_Base",
 
         // Submenu items
         Engagement: "InstitutionAdminMenu.Engagement",
@@ -130,7 +131,14 @@
         Departments: "InstitutionAdminMenu.Departments",
         EducationPrograms: "InstitutionAdminMenu.EducationPrograms",
         Posts: "InstitutionAdminMenu.Posts",
-    }
+    },
+
+    AmbassadorSidebarMenu: {
+        Profile: "AmbassadorSidebarMenu.Profile",
+        Chats: "AmbassadorSidebarMenu.Chats",
+        Analytics: "AmbassadorSidebarMenu.Analytics",
+        Settings: "AmbassadorSidebarMenu.Settings",
+    },
 } as const;
 
 export default LocalizationKeys;

@@ -92,7 +92,7 @@ export const ChangeFacultyForm = ({faculty, institutionId}: ChangeFacultyFormPro
                 logger.log("[ChangeFaculty] Submitting:", faculty.id, values);
 
                 const api = createApi(session?.accessToken);
-                await api.put("/api/faculties/change", {
+                await api.put(`/api/faculties/${institutionId}/change`, {
                     id: faculty.id,
                     name: { kk: values.nameKk, ru: values.nameRu, en: values.nameEn },
                     logoUrl: values.logoUrl,

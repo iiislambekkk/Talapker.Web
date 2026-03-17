@@ -1,13 +1,16 @@
-﻿export interface AmbassadorDto {
+﻿import {InstitutionAdminDto} from "@/Data/models/InstitutionAdminDto";
+
+export interface AmbassadorDto {
     id: string;
-    hasCompletedOnboarding: boolean;
 
-    fullName: string;
+    firstName: string;
+    lastName: string;
     email: string;
+    userId: string;
     avatarUrl?: string | null;
-    wallPaperUrl?: string | null;
 
-    institutionId: string;
+    institutionId?: string | null;
+    institution?: InstitutionAdminDto | null;
 
     educationalProgramId?: string | null;
     educationalProgramName?: string | null;

@@ -79,7 +79,6 @@ export const ChatInput = ({
 
             <CardFooter className="bg-muted border-t border-border p-2">
                 <div className="flex justify-between items-center w-full">
-                    <span className="text-[10px] text-muted-foreground">{poweredByLabel}</span>
                     <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
                         <span className={cn(
                             "w-1 h-1 rounded-full",

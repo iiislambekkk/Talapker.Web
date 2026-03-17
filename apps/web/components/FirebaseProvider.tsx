@@ -1,4 +1,6 @@
-﻿import React, {useEffect} from 'react';
+﻿"use client"
+
+import React, {useEffect} from 'react';
 import {useSession} from "next-auth/react";
 import {useFirebaseMessaging} from "@/hooks/useFirebaseMessaging";
 

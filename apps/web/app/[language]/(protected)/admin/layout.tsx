@@ -13,7 +13,7 @@ const AdminLayout = async ({children} : {children: React.ReactNode}) => {
     const session = await getServerSession(authOptions)
 
     if (!session || !session.user.role.includes(UserRoles.SystemAdmin)) {
-        redirect("/not-admin")
+        redirect("//forbidden?role=SystemAdmin")
     }
 
     return (

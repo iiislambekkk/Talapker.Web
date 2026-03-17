@@ -27,6 +27,10 @@ import {
 import {
     InstitutionAdminNavUser
 } from "@/app/[language]/(protected)/institution-admin/_components/AdminSidebar/InstitutionAdminNavUser";
+import {AmbassadorNavMain} from "@/app/[language]/(protected)/ambassador/_components/AmbassadorNavMain";
+import {AmbassadorNavSecondary} from "@/app/[language]/(protected)/ambassador/_components/Ambassadornavsecondary";
+import {AmbassadorNavUser} from "@/app/[language]/(protected)/ambassador/_components/Ambassadornavuser";
+import LocalizationKeys from "@/i18n/messages/LocalizationKeys";
 
 export function AmbassadorSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { data: session } = useSession();
@@ -39,17 +43,17 @@ export function AmbassadorSidebar({ ...props }: React.ComponentProps<typeof Side
         },
         navMain: [
             {
-                localizationKey: "Profile",
+                localizationKey: LocalizationKeys.AmbassadorSidebarMenu.Profile,
                 icon: User,
                 url: `/ambassador/profile`,
             },
             {
-                localizationKey: "Chats",
+                localizationKey: LocalizationKeys.AmbassadorSidebarMenu.Chats,
                 icon: MessageSquare,
                 url: `/ambassador/chats`,
             },
             {
-                localizationKey: "Analytics",
+                localizationKey: LocalizationKeys.AmbassadorSidebarMenu.Analytics,
                 icon: BarChart3,
                 url: `/ambassador/analytics`,
             },
@@ -85,12 +89,12 @@ export function AmbassadorSidebar({ ...props }: React.ComponentProps<typeof Side
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
-                <InstitutionAdminNavMain items={data.navMain} />
+                <AmbassadorNavMain items={data.navMain} />
                 {/* @ts-ignore */}
-                <InstitutionAdminNavSecondary items={data.navSecondary} className="mt-auto" />
+                <AmbassadorNavSecondary items={data.navSecondary} className="mt-auto" />
             </SidebarContent>
             <SidebarFooter>
-                <InstitutionAdminNavUser />
+                <AmbassadorNavUser />
             </SidebarFooter>
         </Sidebar>
     )

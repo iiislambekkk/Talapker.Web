@@ -7,10 +7,11 @@ import Link from "next/link";
 import {ImageWithFallback} from "@/components/ImageWithFallback";
 import {Skeleton} from "@workspace/ui/components/skeleton";
 
-const InstitutionCard = ({institution}: {institution: InstitutionShortDto}) => {
+const InstitutionCard = ({ institution, isForProspect = false }: { institution: InstitutionShortDto, isForProspect?: boolean }) => {
+    const basePath = isForProspect ? "/prospect" : "/admin";
 
     return (
-        <Link href={`/admin/institutions/${institution.id}`}
+        <Link href={`${basePath}/institutions/${institution.id}`}
               className={"group cursor-pointer relative"}
         >
             <Card className={"py-0 gap-0 h-full"}>

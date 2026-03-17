@@ -8,14 +8,14 @@ import InstitutionCard, {
     InstitutionCardSkeleton
 } from "@/app/[language]/(protected)/admin/institutions/_components/InstitutionCard";
 
-const InstitutionsList = () => {
+const InstitutionsList = ({ isForProspect = false }: { isForProspect?: boolean }) => {
     const { data, error, refetch, status } = useQuery(allInstitutionsShortOptions)
 
     return (
         <div>
             <div className={"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 lg:gap-5"}>
                 {status == "success" && data.map(institution => (
-                    <InstitutionCard key={institution.id} institution={institution} />
+                    <InstitutionCard key={institution.id} institution={institution} isForProspect={isForProspect} />
                 ))}
 
                 {status == "pending" && Array.from({length: 10}).map((el, index) =>

@@ -5,20 +5,20 @@ import {authOptions} from "@/lib/auth/authOptions";
 import {redirect} from "next/navigation";
 import UserRoles from "@/Data/models/UserRoles";
 import RedirectToSignInOnSessionError from "@/lib/auth/RedirectToSignInOnSessionError";
-import {
-    InstitutionAdminSidebar
-} from "@/app/[language]/(protected)/institution-admin/_components/AdminSidebar/InstitutionAdminSidebar";
-import {
-    InstitutionAdminSiteHeader
-} from "@/app/[language]/(protected)/institution-admin/_components/AdminSidebar/InstitutionAdminSiteHeader";
 import {AmbassadorSidebar} from "@/app/[language]/(protected)/ambassador/_components/AmbassadorSidebar";
+import {AutoSignIn} from "@/app/[language]/(protected)/_components/AutoSignIn";
+import {AmbassadorSiteHeader} from "@/app/[language]/(protected)/ambassador/_components/InstitutionAdminSiteHeader";
 
 const InstitutionAmbassadorLayout = async ({children} : {children: React.ReactNode}) => {
     // @ts-ignore
     const session = await getServerSession(authOptions)
 
-    if (!session || !session.user.role.includes(UserRoles.TenantAmbassador)) {
-        redirect("/not-admin")
+    if (!session) {
+        return <AutoSignIn callbackUrl="/ambassador" />;
+    }
+
+    if (!session?.user.role.includes(UserRoles.TenantAmbassador)) {
+        redirect("/forbidden?role=TenantAmbassador")
     }
 
     return (
@@ -32,10 +32,10 @@ const InstitutionAmbassadorLayout = async ({children} : {children: React.ReactNo
           suppressHydrationWarning
         >
             <AmbassadorSidebar
-                sidebarName={"institutionAdmin"}
+                sidebarName={"ambassadorAdmin"}
             />
             <SidebarInset className={""}>
-                <InstitutionAdminSiteHeader />
+                <AmbassadorSiteHeader />
                 <div className="flex flex-1 flex-col">
                     <div className="container mx-auto @container/main flex flex-1 flex-col gap-2">
                         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6 px-4 lg:px-6">

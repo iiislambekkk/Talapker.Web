@@ -10,17 +10,15 @@ import { useRouter } from "next/navigation";
 export const useFirebaseMessaging = () => {
     const router = useRouter();
 
-    if (typeof window === "undefined") {
-        return {
-            subscribe: async () => {},
-            listenForeground: () => () => {},
-            unsubscribe: async () => {},
-        };
-    }
-
-    const messaging = getMessaging(app);
+    const getMessagingInstance = () => {
+        if (typeof window === "undefined") return null;
+        return getMessaging(app);
+    };
 
     const subscribe = async (userId: string, authToken: string) => {
+        const messaging = getMessagingInstance();
+        if (!messaging) return;
+
         if (!userId || !authToken) {
             logger.warn("[FCM] Missing userId or authToken.");
             return;
@@ -84,6 +82,9 @@ export const useFirebaseMessaging = () => {
     };
 
     const unsubscribe = async () => {
+        const messaging = getMessagingInstance();
+        if (!messaging) return;
+
         try {
             const deleted = await deleteToken(messaging);
             if (deleted) {
@@ -97,6 +98,9 @@ export const useFirebaseMessaging = () => {
     };
 
     const listenForeground = () => {
+        const messaging = getMessagingInstance();
+        if (!messaging) return () => {};
+
         return onMessage(messaging, (payload) => {
             logger.log("[FCM] Foreground message received:", payload);
 

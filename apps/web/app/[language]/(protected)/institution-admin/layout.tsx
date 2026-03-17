@@ -11,17 +11,18 @@ import {
 import {
     InstitutionAdminSiteHeader
 } from "@/app/[language]/(protected)/institution-admin/_components/AdminSidebar/InstitutionAdminSiteHeader";
+import {AutoSignIn} from "@/app/[language]/(protected)/_components/AutoSignIn";
 
 const InstitutionAdminLayout = async ({children} : {children: React.ReactNode}) => {
     // @ts-ignore
     const session = await getServerSession(authOptions)
 
     if (!session) {
-        redirect("/not-admin")
+        return <AutoSignIn callbackUrl="/institution-admin" />;
     }
 
     if ((session.user.role != UserRoles.PrimaryTenantAdmin) && (session.user.role != UserRoles.TenantAdmin)) {
-        redirect("/not-admin")
+        redirect("/forbidden?role=TenantAdmin")
     }
 
     return (

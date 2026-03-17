@@ -79,7 +79,7 @@ export default function OnboardingPage() {
 
                 const api = createApi()
 
-                await api.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/onboarding`, {
+                await api.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/onboarding`, {
                     email,
                     code,
                     newPassword: password,

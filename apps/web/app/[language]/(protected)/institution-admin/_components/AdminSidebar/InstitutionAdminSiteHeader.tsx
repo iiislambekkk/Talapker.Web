@@ -9,7 +9,6 @@ import {ChangeLangButton} from "@/components/ChangeLangButton";
 import {ThemeToggle} from "@workspace/ui/components/ThemeToggle";
 import {Separator} from "@workspace/ui/components/separator";
 import {useQuery} from "@tanstack/react-query";
-import {allInstitutionsShortOptions} from "@/lib/tanstackQuery/options/allInstitutionsShortOptions";
 import {institutionByIdOptions} from "@/lib/tanstackQuery/options/institutionShortByIdOptions";
 import {Avatar, AvatarFallback, AvatarImage} from "@workspace/ui/components/avatar";
 import {generateS3UrlFromKey} from "@/lib/generateS3UrlFromKey";

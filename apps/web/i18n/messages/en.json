@@ -129,6 +129,14 @@
 
     "AI_General": "General",
     "Telegram": "Telegram bot",
-    "AI": "AI bot"
+    "AI": "AI bot",
+    "AI_Knowledge_Base": "Knowledge base"
+  },
+
+  "AmbassadorSidebarMenu": {
+    "Profile": "Profile",
+    "Chats": "Chats",
+    "Analytics": "Analytics",
+    "Settings": "Settings"
   }
 }

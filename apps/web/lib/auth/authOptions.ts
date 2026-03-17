@@ -116,7 +116,7 @@ export const authOptions = {
                 email: idTokenDecoded.email ?? "",
                 image: idTokenDecoded.image,
                 name: `${idTokenDecoded.firstName ?? ""} ${idTokenDecoded.lastName ?? ""}`.trim(),
-                role: idTokenDecoded.role,
+                role: idTokenDecoded.role ?? "",
                 tenantId: accessTokenDecoded.tenantId ?? undefined,
             };
 
