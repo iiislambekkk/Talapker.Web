@@ -282,7 +282,7 @@ const Page = () => {
                                         </div>
                                     </div>
                                     <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-                                        {stats.records
+                                        {stats.frequencyRecords
                                             .slice()
                                             .sort((a, b) => b.score - a.score)
                                             .map((record) => {

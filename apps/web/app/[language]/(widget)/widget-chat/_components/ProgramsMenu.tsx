@@ -7,6 +7,7 @@ import {
 } from "@workspace/ui/components/collapsible";
 import { cn } from "@workspace/ui/lib/utils";
 import { useState } from "react";
+import React from "react";
 
 type Lang = 'ru' | 'kk' | 'en';
 

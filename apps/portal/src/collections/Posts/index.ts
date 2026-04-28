@@ -88,7 +88,7 @@ export const Posts: CollectionConfig<'posts'> = {
               required: true,
             },
           ],
-          label: 'Content',
+          label: 'Content'
         },
         {
           fields: [
@@ -99,6 +99,7 @@ export const Posts: CollectionConfig<'posts'> = {
               filterOptions: ({ id }) => ({ id: { not_in: [id] } }),
               hasMany: true,
               relationTo: 'posts',
+              localized: true,
             },
             {
               name: 'categories',
@@ -106,6 +107,7 @@ export const Posts: CollectionConfig<'posts'> = {
               admin: { position: 'sidebar' },
               hasMany: true,
               relationTo: 'categories',
+              localized: true,
             },
           ],
           label: 'Meta',

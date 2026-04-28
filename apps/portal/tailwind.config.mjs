@@ -41,7 +41,15 @@ const config = {
           ],
         },
       }),
-    },
+      colors: {
+        brand: {
+          blue:  '#032a7a',
+          dark:  '#031b4d',
+          red:   '#ed1b24',
+          gold:  '#fdc40f',
+        },
+      }
+    }
   },
 }
 

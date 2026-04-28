@@ -14,7 +14,7 @@ import {
     Tag, ChevronRight, ChevronLeft, Edit3, CheckCircle,
     XCircle, Clock, Sparkles, AlertCircle, RefreshCw,
     FolderOpen, PenLine, MessageSquare, Send, Loader2,
-    Bot, User, CornerDownRight
+    Bot, User, CornerDownRight, ImageIcon
 } from "lucide-react";
 import { createApi } from "@/lib/axios";
 import { logger } from "@/lib/logger";
@@ -26,6 +26,9 @@ import { Input } from "@workspace/ui/components/input";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { Card, CardContent } from "@workspace/ui/components/card";
 import { Field, FieldLabel, FieldError, FieldGroup } from "@workspace/ui/components/field";
+import {
+    useKnowledgeHub
+} from "@/app/[language]/(protected)/institution-admin/[institutionId]/ai/knowledge-base/_components/useKnowledgeHub";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -40,6 +43,7 @@ type KnowledgeFileDto = {
     uploadedAt: string;
     processedAt: string | null;
     entriesCount: number;
+    textContent: string | null;
 };
 
 type KnowledgeEntryDto = {
@@ -69,8 +73,6 @@ type AskResult = {
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const t = {
-    fileName:          { ru: "Название документа",                    kk: "Құжат атауы",                       en: "Document name"                      },
-    fileNameHint:      { ru: "Отображается в базе знаний и источниках ответов", kk: "Білім базасы мен жауап дереккөздерінде көрсетіледі", en: "Shown in knowledge base and answer sources" },
     title:             { ru: "База знаний",                          kk: "Білім базасы",                      en: "Knowledge Base"                     },
     subtitle:          { ru: "Документы и Q&A для AI-бота",          kk: "AI-бот үшін құжаттар мен Q&A",      en: "Documents and Q&A for AI bot"       },
     files:             { ru: "Документы",                            kk: "Құжаттар",                          en: "Documents"                          },
@@ -115,6 +117,19 @@ const t = {
     noAnswer:          { ru: "Задайте первый вопрос",                kk: "Алғашқы сұрақты қойыңыз",           en: "Ask your first question"            },
     noAnswerDesc:      { ru: "AI ответит на основе загруженных документов и Q&A пар", kk: "AI жүктелген құжаттар мен Q&A жұптары негізінде жауап береді", en: "AI will answer based on your documents and Q&A pairs" },
     manualBadge:       { ru: "Вручную",                              kk: "Қолмен",                            en: "Manual"                             },
+    orAddContext:      { ru: "или добавьте контекст",                kk: "немесе контекст қосыңыз",           en: "or add context"                     },
+    orPasteText:       { ru: "или вставьте текст напрямую",          kk: "немесе тікелей мәтін қойыңыз",      en: "or paste text directly"             },
+    additionalContext: { ru: "Дополнительный контекст",              kk: "Қосымша контекст",                  en: "Additional context"                 },
+    additionalContextPlaceholder: { ru: "Уточнения, примечания к документу...", kk: "Құжатқа түсініктемелер...", en: "Notes or clarifications for the document..." },
+    additionalContextHint: { ru: "AI учтёт этот текст при создании Q&A пар", kk: "AI бұл мәтінді Q&A жасауда ескереді", en: "AI will use this when generating Q&A pairs" },
+    pasteText:         { ru: "Вставьте текст",                       kk: "Мәтін қойыңыз",                     en: "Paste text"                         },
+    pasteTextPlaceholder: { ru: "Вставьте текст документа, правила, FAQ...", kk: "Құжат мәтінін, ережелерді қойыңыз...", en: "Paste document text, rules, FAQ..." },
+    pasteTextHint:     { ru: "Файл не обязателен — можно добавить только текст", kk: "Файл міндетті емес — тек мәтін қосуға болады", en: "File is optional — text alone is enough" },
+    fileName:          { ru: "Название документа",                   kk: "Құжат атауы",                       en: "Document name"                      },
+    fileNameHint:      { ru: "Как этот документ будет отображаться в базе знаний", kk: "Бұл құжат білім базасында қалай көрсетіледі", en: "How this document appears in the knowledge base" },
+    textContent:       { ru: "Текстовый контекст",                   kk: "Мәтіндік контекст",                 en: "Text context"                       },
+    hideText:          { ru: "Скрыть текст",                         kk: "Мәтінді жасыру",                    en: "Hide text"                          },
+    showText:          { ru: "Показать текст",                       kk: "Мәтінді көрсету",                   en: "Show text"                          },
 } as const;
 
 // ─── Query helpers ────────────────────────────────────────────────────────────
@@ -157,6 +172,8 @@ const Page = () => {
     const l: Lang = (lang as Lang) in t.title ? (lang as Lang) : "en";
     const token = session?.accessToken ?? "";
 
+    useKnowledgeHub(institutionId, token);
+
     const [tab, setTab] = useState<"files" | "entries" | "ask">("files");
     const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
     const [manualOnly, setManualOnly] = useState(false);
@@ -182,22 +199,19 @@ const Page = () => {
 
     return (
         <div className="container mx-auto py-8 space-y-6 max-w-5xl">
-            {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">{t.title[l]}</h1>
                     <p className="text-muted-foreground mt-1 text-sm">{t.subtitle[l]}</p>
                 </div>
                 <div className="flex gap-2 shrink-0">
-                    <UploadFileForm institutionId={institutionId} token={token} l={l} onSuccess={invalidate} />
+                    <UploadFileForm institutionId={institutionId} token={token} l={l} onSuccess={invalidate} userId={session?.user.sub ?? ""} />
                     <AddEntryForm institutionId={institutionId} token={token} l={l} onSuccess={invalidate} />
                 </div>
             </div>
 
-            {/* Stats */}
             <StatsBar files={files ?? []} entriesTotal={entriesPage?.totalCount ?? 0} l={l} />
 
-            {/* Tabs */}
             <div className="flex gap-1 p-1 bg-muted rounded-xl w-fit">
                 {tabs.map(({ key, label, count }) => (
                     <button
@@ -266,14 +280,14 @@ const Page = () => {
 // ─── Stats bar ────────────────────────────────────────────────────────────────
 
 const StatsBar = ({ files, entriesTotal, l }: { files: KnowledgeFileDto[]; entriesTotal: number; l: Lang }) => {
-    const processed   = files.filter(f => f.status === "Processed").length;
-    const processing  = files.filter(f => f.status === "Processing" || f.status === "Pending").length;
+    const processed  = files.filter(f => f.status === "Processed").length;
+    const processing = files.filter(f => f.status === "Processing" || f.status === "Pending").length;
 
     const stats = [
-        { icon: <FileText className="w-4 h-4" />,    value: files.length, label: t.tab_files[l],        color: "text-blue-500",    bg: "bg-blue-500/10"    },
-        { icon: <Brain className="w-4 h-4" />,        value: entriesTotal, label: t.tab_entries[l],      color: "text-violet-500",  bg: "bg-violet-500/10"  },
-        { icon: <CheckCircle className="w-4 h-4" />,  value: processed,    label: t.statusProcessed[l],  color: "text-emerald-500", bg: "bg-emerald-500/10" },
-        { icon: <RefreshCw className="w-4 h-4" />,    value: processing,   label: t.statusProcessing[l], color: "text-amber-500",   bg: "bg-amber-500/10"   },
+        { icon: <FileText className="w-4 h-4" />,   value: files.length, label: t.tab_files[l],        color: "text-blue-500",    bg: "bg-blue-500/10"    },
+        { icon: <Brain className="w-4 h-4" />,       value: entriesTotal, label: t.tab_entries[l],      color: "text-violet-500",  bg: "bg-violet-500/10"  },
+        { icon: <CheckCircle className="w-4 h-4" />, value: processed,    label: t.statusProcessed[l],  color: "text-emerald-500", bg: "bg-emerald-500/10" },
+        { icon: <RefreshCw className="w-4 h-4" />,   value: processing,   label: t.statusProcessing[l], color: "text-amber-500",   bg: "bg-amber-500/10"   },
     ];
 
     return (
@@ -325,10 +339,10 @@ const FilesTab = ({ files, status, institutionId, token, l, onSelectFile, onDele
 };
 
 const statusConfig = (l: Lang) => ({
-    Pending:    { label: t.statusPending[l],    icon: <Clock className="w-3 h-3" />,                          variant: "secondary" as const   },
-    Processing: { label: t.statusProcessing[l], icon: <RefreshCw className="w-3 h-3 animate-spin" />,         variant: "secondary" as const   },
-    Processed:  { label: t.statusProcessed[l],  icon: <CheckCircle className="w-3 h-3" />,                    variant: "default" as const     },
-    Failed:     { label: t.statusFailed[l],     icon: <XCircle className="w-3 h-3" />,                        variant: "destructive" as const },
+    Pending:    { label: t.statusPending[l],    icon: <Clock className="w-3 h-3" />,                  variant: "secondary" as const   },
+    Processing: { label: t.statusProcessing[l], icon: <RefreshCw className="w-3 h-3 animate-spin" />, variant: "secondary" as const   },
+    Processed:  { label: t.statusProcessed[l],  icon: <CheckCircle className="w-3 h-3" />,            variant: "default" as const     },
+    Failed:     { label: t.statusFailed[l],     icon: <XCircle className="w-3 h-3" />,                variant: "destructive" as const },
 });
 
 const FileRow = ({ file, institutionId, token, l, onViewEntries, onDelete }: {
@@ -336,6 +350,7 @@ const FileRow = ({ file, institutionId, token, l, onViewEntries, onDelete }: {
     onViewEntries: () => void; onDelete: () => void;
 }) => {
     const [deleting, startDeleting] = useTransition();
+    const [textExpanded, setTextExpanded] = useState(false);
     const cfg = statusConfig(l)[file.status];
 
     const handleDelete = () => startDeleting(async () => {
@@ -367,13 +382,39 @@ const FileRow = ({ file, institutionId, token, l, onViewEntries, onDelete }: {
                                     <Brain className="w-3 h-3" />{file.entriesCount} {t.pairs[l]}
                                 </span>
                             )}
+                            {file.textContent && (
+                                <button
+                                    onClick={() => setTextExpanded(v => !v)}
+                                    className="flex items-center gap-1 hover:text-foreground transition-colors"
+                                >
+                                    <PenLine className="w-3 h-3" />
+                                    {textExpanded ? t.hideText[l] : t.showText[l]}
+                                </button>
+                            )}
                             {file.errorMessage && (
                                 <span className="text-destructive flex items-center gap-1">
                                     <AlertCircle className="w-3 h-3" />{file.errorMessage}
                                 </span>
                             )}
                         </div>
+
+                        <AnimatePresence>
+                            {textExpanded && file.textContent && (
+                                <motion.div
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: "auto", opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    transition={{ duration: 0.18 }}
+                                    className="overflow-hidden"
+                                >
+                                    <div className="mt-2.5 text-sm text-muted-foreground leading-relaxed border-l-2 border-blue-500/30 pl-3 whitespace-pre-wrap max-h-48 overflow-y-auto">
+                                        {file.textContent}
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
+
                     <div className="flex items-center gap-1 shrink-0">
                         {file.status === "Processed" && file.entriesCount > 0 && (
                             <Button size="sm" variant="ghost" onClick={onViewEntries} className="text-xs gap-1 h-8">
@@ -409,7 +450,6 @@ const EntriesTab = ({ entriesPage, status, files, institutionId, token, l,
 
     return (
         <div className="space-y-4">
-            {/* Filters */}
             <div className="flex flex-wrap gap-2 items-center">
                 <select
                     value={manualOnly ? "manual" : (selectedFileId ?? "")}
@@ -567,7 +607,6 @@ const AskTab = ({ institutionId, token, l }: { institutionId: string; token: str
 
     return (
         <div className="space-y-4">
-            {/* Input */}
             <Card className="border-0 bg-gradient-to-br from-violet-500/5 via-background to-blue-500/5 shadow-none ring-1 ring-border">
                 <CardContent className="p-5 space-y-3">
                     <div className="flex items-center gap-2 mb-1">
@@ -598,7 +637,6 @@ const AskTab = ({ institutionId, token, l }: { institutionId: string; token: str
                 </CardContent>
             </Card>
 
-            {/* Result */}
             <AnimatePresence mode="wait">
                 {asking && (
                     <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -617,7 +655,6 @@ const AskTab = ({ institutionId, token, l }: { institutionId: string; token: str
                 )}
                 {!asking && result && (
                     <motion.div key="result" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
-                        {/* Question echo */}
                         <div className="flex items-start gap-3 mb-3">
                             <div className="p-2 bg-muted rounded-xl shrink-0 mt-0.5">
                                 <User className="w-3.5 h-3.5 text-muted-foreground" />
@@ -627,7 +664,6 @@ const AskTab = ({ institutionId, token, l }: { institutionId: string; token: str
                             </div>
                         </div>
 
-                        {/* Answer */}
                         <div className="flex items-start gap-3">
                             <div className="p-2 bg-violet-500/10 rounded-xl shrink-0 mt-0.5">
                                 <Bot className="w-3.5 h-3.5 text-violet-500" />
@@ -682,37 +718,38 @@ const AskTab = ({ institutionId, token, l }: { institutionId: string; token: str
 
 // ─── Upload file form ─────────────────────────────────────────────────────────
 
-const UploadFileForm = ({ institutionId, token, l, onSuccess }: {
-    institutionId: string; token: string; l: Lang; onSuccess: () => void;
+const UploadFileForm = ({ institutionId, token, l, onSuccess, userId }: {
+    institutionId: string; token: string; l: Lang; onSuccess: () => void; userId: string
 }) => {
     const [open, setOpen] = useState(false);
     const [file, setFile] = useState<File | null>(null);
     const [customName, setCustomName] = useState("");
+    const [additionalText, setAdditionalText] = useState("");
     const [uploading, startUploading] = useTransition();
 
     const handleFileChange = (f: File) => {
         setFile(f);
-        // подставить имя файла без расширения как дефолт
-        const nameWithoutExt = f.name.replace(/\.[^/.]+$/, "");
-        setCustomName(nameWithoutExt);
+        setCustomName(f.name.replace(/\.[^/.]+$/, ""));
     };
 
     const handleUpload = () => {
-        if (!file) return;
+        if (!file && !additionalText.trim()) return;
         startUploading(async () => {
             try {
                 const form = new FormData();
-                form.append("file", file);
-                form.append("name", customName.trim() || file.name);
+                if (file) form.append("file", file);
+                if (file) form.append("userId", userId);
+                if (customName.trim()) form.append("name", customName.trim());
+                if (additionalText.trim()) form.append("text", additionalText.trim());
                 await createApi(token).post(`/institutions/${institutionId}/knowledge/files`, form, {
                     headers: { "Content-Type": "multipart/form-data" }
                 });
                 toast.success(t.uploadSuccess[l]);
-                setOpen(false);
-                setFile(null);
-                setCustomName("");
+                handleClose();
                 onSuccess();
-            } catch (e) { logger.error("[UploadFileForm]", e); }
+            } catch (e) {
+                logger.error("[UploadFileForm]", e);
+            }
         });
     };
 
@@ -720,22 +757,33 @@ const UploadFileForm = ({ institutionId, token, l, onSuccess }: {
         setOpen(false);
         setFile(null);
         setCustomName("");
+        setAdditionalText("");
     };
 
+    const canSubmit = (file !== null || additionalText.trim().length > 0) && !uploading;
+
     return (
-        <DrawerForm open={open} setOpen={setOpen}
-                    trigger={<Button variant="outline" size="sm" className="gap-2"><Upload className="w-3.5 h-3.5" />{t.uploadFile[l]}</Button>}
-                    title={t.uploadFile[l]} description={t.uploadDesc[l]}>
+        <DrawerForm
+            open={open}
+            setOpen={setOpen}
+            trigger={
+                <Button variant="outline" size="sm" className="gap-2">
+                    <Upload className="w-3.5 h-3.5" />{t.uploadFile[l]}
+                </Button>
+            }
+            title={t.uploadFile[l]}
+            description={t.uploadDesc[l]}
+        >
             <div className="space-y-5">
-                {/* Drop zone */}
                 <div
                     onClick={() => document.getElementById("kb-file-input")?.click()}
-                    className="border-2 border-dashed border-border rounded-2xl p-8 text-center cursor-pointer hover:border-violet-500/40 hover:bg-muted/30 transition-all">
+                    className="border-2 border-dashed border-border rounded-2xl p-8 text-center cursor-pointer hover:border-violet-500/40 hover:bg-muted/30 transition-all"
+                >
                     <input
                         id="kb-file-input"
                         type="file"
                         className="hidden"
-                        accept=".pdf,.doc,.docx,.txt"
+                        accept=".pdf,.txt,image/jpeg,image/png,image/webp,image/gif"
                         onChange={e => {
                             const f = e.target.files?.[0];
                             if (f) handleFileChange(f);
@@ -743,8 +791,11 @@ const UploadFileForm = ({ institutionId, token, l, onSuccess }: {
                     />
                     {file ? (
                         <div className="flex items-center justify-center gap-3">
-                            <div className="p-2.5 bg-blue-500/10 rounded-xl">
-                                <FileText className="w-6 h-6 text-blue-500" />
+                            <div className={`p-2.5 rounded-xl ${file.type.startsWith("image/") ? "bg-emerald-500/10" : "bg-blue-500/10"}`}>
+                                {file.type.startsWith("image/")
+                                    ? <ImageIcon className="w-6 h-6 text-emerald-500" />
+                                    : <FileText className="w-6 h-6 text-blue-500" />
+                                }
                             </div>
                             <div className="text-left">
                                 <p className="font-medium text-sm">{file.name}</p>
@@ -752,7 +803,8 @@ const UploadFileForm = ({ institutionId, token, l, onSuccess }: {
                             </div>
                             <button
                                 onClick={e => { e.stopPropagation(); setFile(null); setCustomName(""); }}
-                                className="ml-auto p-1 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
+                                className="ml-auto p-1 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                            >
                                 <XCircle className="w-4 h-4" />
                             </button>
                         </div>
@@ -762,12 +814,33 @@ const UploadFileForm = ({ institutionId, token, l, onSuccess }: {
                                 <Upload className="w-5 h-5 text-muted-foreground" />
                             </div>
                             <p className="text-sm text-muted-foreground">{t.chooseFile[l]}</p>
-                            <p className="text-xs text-muted-foreground opacity-60">PDF, DOC, DOCX, TXT</p>
+                            <p className="text-xs text-muted-foreground opacity-60">PDF, TXT, JPG, PNG, WEBP, GIF</p>
                         </div>
                     )}
                 </div>
 
-                {/* Custom name input — показывается после выбора файла */}
+                <div className="flex items-center gap-3">
+                    <div className="flex-1 h-px bg-border" />
+                    <span className="text-xs text-muted-foreground">
+                        {file ? t.orAddContext[l] : t.orPasteText[l]}
+                    </span>
+                    <div className="flex-1 h-px bg-border" />
+                </div>
+
+                <Field>
+                    <FieldLabel>{file ? t.additionalContext[l] : t.pasteText[l]}</FieldLabel>
+                    <textarea
+                        value={additionalText}
+                        onChange={e => setAdditionalText(e.target.value)}
+                        rows={5}
+                        placeholder={file ? t.additionalContextPlaceholder[l] : t.pasteTextPlaceholder[l]}
+                        className="w-full rounded-xl border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring resize-none"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                        {file ? t.additionalContextHint[l] : t.pasteTextHint[l]}
+                    </p>
+                </Field>
+
                 <AnimatePresence>
                     {file && (
                         <motion.div
@@ -775,7 +848,8 @@ const UploadFileForm = ({ institutionId, token, l, onSuccess }: {
                             animate={{ opacity: 1, height: "auto" }}
                             exit={{ opacity: 0, height: 0 }}
                             transition={{ duration: 0.18 }}
-                            className="overflow-hidden">
+                            className="overflow-hidden"
+                        >
                             <Field>
                                 <FieldLabel>{t.fileName[l]}</FieldLabel>
                                 <Input
@@ -790,8 +864,10 @@ const UploadFileForm = ({ institutionId, token, l, onSuccess }: {
                 </AnimatePresence>
 
                 <div className="flex gap-3">
-                    <Button variant="outline" onClick={handleClose} className="flex-1">{t.cancel[l]}</Button>
-                    <Button onClick={handleUpload} disabled={!file || uploading} className="flex-1 gap-2">
+                    <Button variant="outline" onClick={handleClose} className="flex-1">
+                        {t.cancel[l]}
+                    </Button>
+                    <Button onClick={handleUpload} disabled={!canSubmit} className="flex-1 gap-2">
                         {uploading
                             ? <><Loader2 className="w-4 h-4 animate-spin" />{t.uploading[l]}</>
                             : <><Sparkles className="w-4 h-4" />{t.uploadFile[l]}</>

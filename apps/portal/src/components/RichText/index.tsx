@@ -3,7 +3,6 @@ import {
   DefaultNodeTypes,
   SerializedBlockNode,
   SerializedLinkNode,
-  type DefaultTypedEditorState,
 } from '@payloadcms/richtext-lexical'
 import {
   JSXConvertersFunction,
@@ -12,11 +11,13 @@ import {
 } from '@payloadcms/richtext-lexical/react'
 
 import { CodeBlock, CodeBlockProps } from '@/blocks/Code/Component'
+import { CarouselBlock } from '@/blocks/Carousel/Component' // Добавлено
 
 import type {
   BannerBlock as BannerBlockProps,
   CallToActionBlock as CTABlockProps,
   MediaBlock as MediaBlockProps,
+  CarouselBlock as CarouselBlockProps, // Добавлено
 } from '@/payload-types'
 import { BannerBlock } from '@/blocks/Banner/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
@@ -24,7 +25,9 @@ import { cn } from '@/utilities/ui'
 
 type NodeTypes =
   | DefaultNodeTypes
-  | SerializedBlockNode<CTABlockProps | MediaBlockProps | BannerBlockProps | CodeBlockProps>
+  | SerializedBlockNode<
+  CTABlockProps | MediaBlockProps | BannerBlockProps | CodeBlockProps | CarouselBlockProps
+>
 
 const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
   const { value, relationTo } = linkNode.fields.doc!
@@ -52,30 +55,43 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
     ),
     code: ({ node }) => <CodeBlock className="col-start-2" {...node.fields} />,
     cta: ({ node }) => <CallToActionBlock {...node.fields} />,
+    carousel: ({ node }) => <CarouselBlock {...node.fields} />, // Добавлено
   },
 })
 
 type Props = {
-  data: DefaultTypedEditorState
+  data: any
   enableGutter?: boolean
   enableProse?: boolean
 } & React.HTMLAttributes<HTMLDivElement>
 
 export default function RichText(props: Props) {
   const { className, enableProse = true, enableGutter = true, ...rest } = props
+
   return (
-    <ConvertRichText
-      converters={jsxConverters}
-      className={cn(
-        'payload-richtext',
-        {
-          container: enableGutter,
-          'max-w-none': !enableGutter,
-          'mx-auto prose md:prose-md dark:prose-invert': enableProse,
-        },
-        className,
-      )}
-      {...rest}
-    />
+    <div className={cn(
+      'rich-text-container',
+      {
+        'mx-auto prose md:prose-md dark:prose-invert': enableProse,
+        'container': enableGutter,
+      }
+    )}>
+      <ConvertRichText
+        converters={jsxConverters}
+        className={cn(
+          'payload-richtext',
+          '[&_.text-start]:text-left [&_.text-left]:text-left',
+          '[&_.text-center]:text-center',
+          '[&_.text-end]:text-right [&_.text-right]:text-right',
+          '[&_.text-justify]:text-justify',
+          '[&_table]:border-collapse [&_table]:w-full [&_table]:my-4',
+          '[&_th]:border [&_th]:border-border [&_th]:p-2 [&_th]:bg-muted',
+          '[&_td]:border [&_td]:border-border [&_td]:p-2',
+          '[&_ul[role=list]]:list-none [&_ul[role=list]_input[type=checkbox]]:mr-2',
+          className,
+        )}
+        {...rest}
+      />
+    </div>
   )
 }

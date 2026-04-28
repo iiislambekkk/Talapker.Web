@@ -67,7 +67,7 @@ export default buildConfig({
     s3Storage({
       collections: {
         media: true,
-        documents: true, // PDF тоже в R2
+        documents: true,
       },
       bucket: process.env.R2_BUCKET!,
       config: {
@@ -82,7 +82,7 @@ export default buildConfig({
     }),
   ],
   i18n: {
-    fallbackLanguage: 'kk',
+    fallbackLanguage: 'ru',
   },
   localization: {
     locales: [

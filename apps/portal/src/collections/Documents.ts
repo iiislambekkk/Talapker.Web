@@ -14,7 +14,15 @@ export const Documents: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'updatedAt'],
   },
-  upload: true,
+  upload: {
+    mimeTypes: [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    ],
+  },
   fields: [
     {
       name: 'title',

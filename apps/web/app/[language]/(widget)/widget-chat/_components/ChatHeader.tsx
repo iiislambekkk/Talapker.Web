@@ -7,6 +7,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@workspace/ui/components/card";
+import React from "react";
 
 interface ChatHeaderProps {
     institutionName: string;

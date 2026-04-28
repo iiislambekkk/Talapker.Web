@@ -4,13 +4,15 @@
 
 export enum GrantCompetitionType {
     General = "General",
-    Rural = "Rural"
+    Rural = "Rural",
+    Profile = "Profile",
+    Ped = "Profile"
 }
-
 export enum Degree {
     Bachelor = "Bachelor",
     Magistracy = "Magistracy",
-    Doctor = "Doctor"
+    Doctor = "Doctor",
+    Philosopher = "Philosopher"
 }
 
 export enum Language {
@@ -35,27 +37,39 @@ export interface UntPairDto {
 }
 
 // ===== GRANT =====
-
-export interface GrantCompetitionRecordDto {
+export interface FrequencyRecordDto {
     score: number;
     frequency: number;
 }
+
+export interface OvpoRecordDto {
+    score: number;
+    frequency: number;
+    ovpo: number;
+}
+
+export enum GrantDegree {
+    Bachelor = 0,
+    Magistracy = 1,
+    Philosopher = 2
+}
+
 
 export interface GrantCompetitionStatisticDto {
     id: string;
     year: number;
     competitionType: GrantCompetitionType;
+    degree: GrantDegree;
     minScore: number;
     totalGrants: number;
-    records: GrantCompetitionRecordDto[];
+    frequencyRecords: FrequencyRecordDto[];
+    ovpoRecords: OvpoRecordDto[];
 }
-
-// ===== EDUCATION HIERARCHY =====
 
 export interface EducationGroupDto {
     id: string;
     nationalCode: string;
-    educationFieldId: string;
+    educationFieldId: string | null;
     name: LocalizedText;
     untSubjectsPairs: UntPairDto[];
     grantCompetitionStatistics: GrantCompetitionStatisticDto[];

@@ -1,5 +1,6 @@
 ﻿import { Metadata } from 'next';
 import {TalapkerChatWidget} from "@/app/[language]/(widget)/widget-chat/_components/TalapkerChatWidget";
+import React from "react";
 
 export const metadata: Metadata = {
     title: 'Talapker Chat Widget',
