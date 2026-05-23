@@ -108,6 +108,8 @@ export interface EducationProgramDto {
     workPlaces: LocalizedText;
     practiseBases: LocalizedText;
     minimumUntScore: number;
+    minimumPlatnoeUntScore: number;
+    minimumGrantUntScore: number;
     code: string;
     studyForm: StudyForm;
     durationYears: number;

@@ -238,6 +238,22 @@ export const useTalapkerChat = ({
         }
     }, [hubConnection, isConnected, effectiveUserId, institutionId]);
 
+    const clearHistory = useCallback(async () => {
+        if (!effectiveUserId || !institutionId) return;
+
+        const params = new URLSearchParams();
+        params.append('userId', effectiveUserId);
+        params.append('institutionId', institutionId);
+
+        await fetch(
+            `${env.NEXT_PUBLIC_BACKEND_URL}/api/talapker/history?${params.toString()}`,
+            { method: 'DELETE' }
+        );
+
+        setMessages([]);
+        setResponse('');
+    }, [effectiveUserId, institutionId]);
+
     const resetAnonymousId = useCallback(() => {
         if (!session?.user?.sub && !propUserId) {
             localStorage.removeItem(ANONYMOUS_ID_KEY);
@@ -256,6 +272,7 @@ export const useTalapkerChat = ({
         sendMessage,
         resetAnonymousId,
         clearResponse: () => setResponse(''),
+        clearHistory,
         messages,
         isLoadingHistory,
         fetchNextPage,

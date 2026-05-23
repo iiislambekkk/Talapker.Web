@@ -6,7 +6,7 @@ import {
     CollapsibleTrigger,
 } from "@workspace/ui/components/collapsible";
 import { cn } from "@workspace/ui/lib/utils";
-import { useState } from "react";
+import { useState, memo, useCallback } from "react";
 import React from "react";
 
 type Lang = 'ru' | 'kk' | 'en';
@@ -33,21 +33,26 @@ interface ProgramsMenuProps {
     allProgramsLabel: string;
 }
 
-export const ProgramsMenu = ({
-                                 faculties,
-                                 isLoading,
-                                 lang,
-                                 onProgramClick,
-                                 onAllProgramsClick,
-                                 programsLabel,
-                                 allProgramsLabel,
-                             }: ProgramsMenuProps) => {
+export const ProgramsMenu = memo(({
+                                      faculties,
+                                      isLoading,
+                                      lang,
+                                      onProgramClick,
+                                      onAllProgramsClick,
+                                      programsLabel,
+                                      allProgramsLabel,
+                                  }: ProgramsMenuProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [openFaculties, setOpenFaculties] = useState<Record<string, boolean>>({});
 
-    const toggleFaculty = (facultyId: string) => {
+    const toggleFaculty = useCallback((facultyId: string) => {
         setOpenFaculties(prev => ({ ...prev, [facultyId]: !prev[facultyId] }));
-    };
+    }, []);
+
+    const handleAllPrograms = useCallback(() => {
+        onAllProgramsClick();
+        setIsOpen(false);
+    }, [onAllProgramsClick]);
 
     return (
         <div className="mt-2">
@@ -76,49 +81,22 @@ export const ProgramsMenu = ({
                                 variant="ghost"
                                 size="sm"
                                 className="w-full justify-start gap-2 text-sm"
-                                onClick={() => { onAllProgramsClick(); setIsOpen(false); }}
+                                onClick={handleAllPrograms}
                             >
                                 <Sparkles className="w-3 h-3" />
                                 {allProgramsLabel}
                             </Button>
 
                             {faculties?.map((faculty) => (
-                                <div key={faculty.id} className="space-y-1">
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="w-full justify-between gap-2 text-xs font-semibold text-muted-foreground"
-                                        onClick={() => toggleFaculty(faculty.id)}
-                                    >
-                                        <span className="truncate">
-                                            {faculty.name[lang] || faculty.name.ru}
-                                        </span>
-                                        <ChevronRight className={cn(
-                                            "w-3 h-3 transition-transform shrink-0",
-                                            openFaculties[faculty.id] && "rotate-90"
-                                        )} />
-                                    </Button>
-
-                                    {openFaculties[faculty.id] && (
-                                        <div className="pl-2 space-y-1">
-                                            {faculty.educationPrograms.map((program) => (
-                                                <Button
-                                                    key={program.id}
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    className="w-full justify-start gap-2 text-xs pl-4"
-                                                    onClick={() => {
-                                                        onProgramClick(program.code, program.name[lang] || program.name.ru);
-                                                        setIsOpen(false);
-                                                    }}
-                                                >
-                                                    <span className="font-mono text-[10px] text-primary">{program.code}</span>
-                                                    <span className="truncate">{program.name[lang] || program.name.ru}</span>
-                                                </Button>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
+                                <FacultyItem
+                                    key={faculty.id}
+                                    faculty={faculty}
+                                    lang={lang}
+                                    isOpen={!!openFaculties[faculty.id]}
+                                    onToggle={toggleFaculty}
+                                    onProgramClick={onProgramClick}
+                                    onCloseMenu={setIsOpen}
+                                />
                             ))}
                         </>
                     )}
@@ -126,4 +104,78 @@ export const ProgramsMenu = ({
             </Collapsible>
         </div>
     );
-};
+});
+ProgramsMenu.displayName = "ProgramsMenu";
+
+// Вынесен отдельно чтобы не ре-рендерить весь список при открытии одного факультета
+interface FacultyItemProps {
+    faculty: Faculty;
+    lang: Lang;
+    isOpen: boolean;
+    onToggle: (id: string) => void;
+    onProgramClick: (code: string, name: string) => void;
+    onCloseMenu: (open: boolean) => void;
+}
+
+const FacultyItem = memo(({ faculty, lang, isOpen, onToggle, onProgramClick, onCloseMenu }: FacultyItemProps) => {
+    const handleToggle = useCallback(() => onToggle(faculty.id), [faculty.id, onToggle]);
+
+    return (
+        <div className="space-y-1">
+            <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-between gap-2 text-xs font-semibold text-muted-foreground"
+                onClick={handleToggle}
+            >
+                <span className="truncate">{faculty.name[lang] || faculty.name.ru}</span>
+                <ChevronRight className={cn(
+                    "w-3 h-3 transition-transform shrink-0",
+                    isOpen && "rotate-90"
+                )} />
+            </Button>
+
+            {isOpen && (
+                <div className="pl-2 space-y-1">
+                    {faculty.educationPrograms.map((program) => (
+                        <ProgramButton
+                            key={program.id}
+                            program={program}
+                            lang={lang}
+                            onProgramClick={onProgramClick}
+                            onCloseMenu={onCloseMenu}
+                        />
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+});
+FacultyItem.displayName = "FacultyItem";
+
+interface ProgramButtonProps {
+    program: Program;
+    lang: Lang;
+    onProgramClick: (code: string, name: string) => void;
+    onCloseMenu: (open: boolean) => void;
+}
+
+const ProgramButton = memo(({ program, lang, onProgramClick, onCloseMenu }: ProgramButtonProps) => {
+    const handleClick = useCallback(() => {
+        onProgramClick(program.code, program.name[lang] || program.name.ru);
+        onCloseMenu(false);
+    }, [program.code, program.name, lang, onProgramClick, onCloseMenu]);
+
+    return (
+        <Button
+            variant="ghost"
+            size="sm"
+            className="w-full justify-start gap-2 text-xs pl-4"
+            onClick={handleClick}
+        >
+            <span className="font-mono text-[10px] text-primary">{program.code}</span>
+            <span className="truncate">{program.name[lang] || program.name.ru}</span>
+        </Button>
+    );
+});
+ProgramButton.displayName = "ProgramButton";

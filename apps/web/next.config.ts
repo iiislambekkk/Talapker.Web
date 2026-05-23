@@ -14,7 +14,8 @@ const nextConfig = {
     },
     images: {
         domains: ['pub-50614374e3ae4c0d88c3543f2f875fce.r2.dev']
-    }
+    },
+    devIndicators: false,
 };
 
 const withNextIntl = createNextIntlPlugin();

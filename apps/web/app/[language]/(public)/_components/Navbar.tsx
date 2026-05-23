@@ -20,6 +20,7 @@ import {ChangeLangButton} from "@/components/ChangeLangButton";
 import {Loader2} from "lucide-react";
 import UserDropdown from "@/app/[language]/(public)/_components/UserDropdown";
 import {Button} from "@workspace/ui/components/button";
+import {usePathname} from "next/navigation";
 
 const components: { title: string; href: string; description: string }[] = [
     {
@@ -64,6 +65,7 @@ const Navbar = () => {
     const {data: session, status} = useSession()
     const [lang] = useLang()
     const t = useTranslations("NavBar")
+    const path = usePathname()
 
     const handleLogin = () => {
         signIn("pharosIdentityServer", {
@@ -72,6 +74,20 @@ const Navbar = () => {
     };
 
     const isMobile = useIsMobile()
+
+
+    if (path.includes("institution/")) {
+        return <div className={"h-10 mb-5 flex  justify-between mt-2"}>
+            <div>
+
+            </div>
+            <div className={"flex gap-5"}>
+                <ThemeToggle/>
+                <ChangeLangButton />
+            </div>
+
+        </div>
+    }
 
     return (
         <NavigationMenu viewport={isMobile} className={"z-50 container! mx-auto w-full sticky top-0 px-4 md:px-6 lg:px-8"}>

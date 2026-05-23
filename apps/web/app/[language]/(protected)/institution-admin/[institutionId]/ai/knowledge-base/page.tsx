@@ -29,6 +29,7 @@ import { Field, FieldLabel, FieldError, FieldGroup } from "@workspace/ui/compone
 import {
     useKnowledgeHub
 } from "@/app/[language]/(protected)/institution-admin/[institutionId]/ai/knowledge-base/_components/useKnowledgeHub";
+import {env} from "@/lib/env";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -375,6 +376,7 @@ const FileRow = ({ file, institutionId, token, l, onViewEntries, onDelete }: {
                                 {cfg.icon}{cfg.label}
                             </Badge>
                         </div>
+
                         <div className="flex items-center gap-3 mt-0.5 text-xs text-muted-foreground">
                             <span>{new Date(file.uploadedAt).toLocaleDateString()}</span>
                             {file.status === "Processed" && (
@@ -395,6 +397,10 @@ const FileRow = ({ file, institutionId, token, l, onViewEntries, onDelete }: {
                                 <span className="text-destructive flex items-center gap-1">
                                     <AlertCircle className="w-3 h-3" />{file.errorMessage}
                                 </span>
+                            )}
+
+                            {file.storageKey && (
+                                <a target={"_blank"} href={env.NEXT_PUBLIC_CLOUDFLARE_R2_PUBLIC_URL + "/" + file.storageKey}><span className={"hover:text-blue-700!"}>Скачать</span></a>
                             )}
                         </div>
 

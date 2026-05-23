@@ -1,20 +1,17 @@
 ﻿"use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, memo } from "react";
 import {
-    Bot, Send, Loader2, AlertCircle,
-    User, CheckCheck, ChevronDown, Mic, MicOff,
+    Bot, Loader2, AlertCircle,
+    User, CheckCheck, ChevronDown,
 } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
-import { Textarea } from "@workspace/ui/components/textarea";
-import { CardFooter } from "@workspace/ui/components/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar";
 import { cn } from "@workspace/ui/lib/utils";
 import { useInView } from "react-intersection-observer";
 import MessageContent from "@/components/MessageContent";
 import { logger } from "@/lib/logger";
-
-// ─── Types ───────────────────────────────────────────────────────────────────
+import { ChatWelcome } from "./ChatWelcome";
 
 export interface ChatMessage {
     id: string;
@@ -32,9 +29,7 @@ interface BotAvatarProps {
     size?: "sm" | "md";
 }
 
-// ─── BotAvatar ────────────────────────────────────────────────────────────────
-
-const BotAvatar = ({ logoUrl, name, fallback, size = "sm" }: BotAvatarProps) => {
+const BotAvatar = memo(({ logoUrl, name, fallback, size = "sm" }: BotAvatarProps) => {
     const dim = size === "sm" ? "w-6 h-6" : "w-9 h-9";
     return (
         <div className={cn("rounded-full shrink-0 overflow-hidden bg-primary/10 flex items-center justify-center", dim)}>
@@ -50,9 +45,64 @@ const BotAvatar = ({ logoUrl, name, fallback, size = "sm" }: BotAvatarProps) => 
             )}
         </div>
     );
-};
+});
+BotAvatar.displayName = "BotAvatar";
 
-// ─── ChatMessages ─────────────────────────────────────────────────────────────
+interface MessageItemProps {
+    msg: ChatMessage;
+    lang: Lang;
+    botLogoUrl: string | null;
+    botName: string;
+    botFallback: string;
+    onSuggestionClick: (text: string) => void;
+    onSuggestionPrefill: (text: string) => void;
+}
+
+const MessageItem = memo(({ msg, lang, botLogoUrl, botName, botFallback, onSuggestionClick, onSuggestionPrefill }: MessageItemProps) => (
+        <div className={cn("flex", msg.isUser ? "justify-end" : "justify-start")}>
+            <div className={cn("flex gap-2 max-w-[90%] xl:max-w-[80%]", msg.isUser ? "flex-row-reverse" : "flex-row")}>
+                <div className={cn(
+                    "w-6 h-6 rounded-full shrink-0 flex items-center justify-center",
+                    msg.isUser && "bg-primary/20"
+                )}>
+                    {msg.isUser
+                        ? <User className="w-3 h-3 text-primary" />
+                        : <BotAvatar logoUrl={botLogoUrl} name={botName} fallback={botFallback} />}
+                </div>
+                <div className="space-y-1">
+                    <div className={cn(
+                        "rounded-2xl px-3 py-2",
+                        msg.isUser ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
+                    )}>
+                        <MessageContent
+                            lang={lang}
+                            content={msg.content}
+                            isUser={msg.isUser}
+                            isStreaming={false}
+                            onSuggestionClick={msg.isUser ? undefined : onSuggestionClick}
+                            onSuggestionPrefill={msg.isUser ? undefined : onSuggestionPrefill}
+                        />
+                    </div>
+                    <div className={cn(
+                        "flex items-center gap-1 text-[10px] text-muted-foreground",
+                        msg.isUser ? "justify-end" : "justify-start"
+                    )}>
+                        <span>{msg.timeAgo}</span>
+                        {msg.isUser && <CheckCheck className="w-3 h-3" />}
+                    </div>
+                </div>
+            </div>
+        </div>
+    ), (prev, next) =>
+        prev.msg.id === next.msg.id &&
+        prev.msg.content === next.msg.content &&
+        prev.msg.timeAgo === next.msg.timeAgo &&
+        prev.lang === next.lang &&
+        prev.botLogoUrl === next.botLogoUrl &&
+        prev.onSuggestionClick === next.onSuggestionClick &&
+        prev.onSuggestionPrefill === next.onSuggestionPrefill
+);
+MessageItem.displayName = "MessageItem";
 
 interface ChatMessagesProps {
     containerRef: React.RefObject<HTMLDivElement>;
@@ -72,39 +122,43 @@ interface ChatMessagesProps {
     institutionName: string;
     institutionFallback: string;
     lang: Lang;
+    poweredByLabel: string;
+    onSuggestionClick: (message: string) => void;
+    onSuggestionPrefill: (message: string) => void;
     labels: {
         loadingHistory: string;
         loadPrevious: string;
         typing: string;
+        thinking: string;
     };
 }
 
-export const ChatMessages = ({
-                                 containerRef,
-                                 messages,
-                                 response,
-                                 isStreaming,
-                                 error,
-                                 isLoadingHistory,
-                                 hasNextPage,
-                                 isFetchingNextPage,
-                                 showScrollButton,
-                                 onScroll,
-                                 onScrollButtonClick,
-                                 onLoadMore,
-                                 onBeforeFetchNextPage,
-                                 institutionLogoUrl,
-                                 institutionName,
-                                 institutionFallback,
-                                 lang,
-                                 labels,
-                             }: ChatMessagesProps) => {
-    const botProps = { logoUrl: institutionLogoUrl, name: institutionName, fallback: institutionFallback };
-
+export const ChatMessages = memo(({
+                                      containerRef,
+                                      messages,
+                                      response,
+                                      isStreaming,
+                                      error,
+                                      isLoadingHistory,
+                                      hasNextPage,
+                                      isFetchingNextPage,
+                                      showScrollButton,
+                                      onScroll,
+                                      onScrollButtonClick,
+                                      onLoadMore,
+                                      onBeforeFetchNextPage,
+                                      institutionLogoUrl,
+                                      institutionName,
+                                      institutionFallback,
+                                      lang,
+                                      poweredByLabel,
+                                      onSuggestionClick,
+                                      onSuggestionPrefill,
+                                      labels,
+                                  }: ChatMessagesProps) => {
     const { ref: loadMoreRef, inView } = useInView({
         threshold: 0,
         rootMargin: "200px",
-        root: containerRef.current,
     });
 
     useEffect(() => {
@@ -115,12 +169,24 @@ export const ChatMessages = ({
         }
     }, [inView, hasNextPage, isFetchingNextPage, isLoadingHistory]);
 
+    const isEmpty = messages.length === 0 && !isStreaming && !response && !isLoadingHistory;
+
     return (
         <div className="p-0 flex-1 overflow-hidden relative">
             <div ref={containerRef} onScroll={onScroll} className="h-full overflow-y-auto bg-background">
                 <div className="p-4 space-y-4">
 
-                    {/* Load more trigger */}
+                    {isEmpty && (
+                        <ChatWelcome
+                            lang={lang}
+                            institutionName={institutionName}
+                            institutionLogoUrl={institutionLogoUrl}
+                            institutionFallback={institutionFallback}
+                            poweredByLabel={poweredByLabel}
+                            onSuggestionClick={onSuggestionClick}
+                        />
+                    )}
+
                     {hasNextPage && (
                         <div ref={loadMoreRef} className="flex justify-center py-2 min-h-[40px]">
                             {isFetchingNextPage ? (
@@ -145,45 +211,53 @@ export const ChatMessages = ({
                         </div>
                     )}
 
-                    {/* Messages */}
                     {messages.map((msg) => (
-                        <div key={msg.id} className={cn("flex", msg.isUser ? "justify-end" : "justify-start")}>
-                            <div className={cn("flex gap-2 max-w-[80%]", msg.isUser ? "flex-row-reverse" : "flex-row")}>
-                                <div className={cn(
-                                    "w-6 h-6 rounded-full shrink-0 flex items-center justify-center",
-                                    msg.isUser && "bg-primary/20"
-                                )}>
-                                    {msg.isUser
-                                        ? <User className="w-3 h-3 text-primary" />
-                                        : <BotAvatar {...botProps} />}
-                                </div>
-                                <div className="space-y-1">
-                                    <div className={cn(
-                                        "rounded-2xl px-3 py-2",
-                                        msg.isUser ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
-                                    )}>
-                                        <MessageContent lang={lang} content={msg.content} isUser={msg.isUser} />
-                                    </div>
-                                    <div className={cn(
-                                        "flex items-center gap-1 text-[10px] text-muted-foreground",
-                                        msg.isUser ? "justify-end" : "justify-start"
-                                    )}>
-                                        <span>{msg.timeAgo}</span>
-                                        {msg.isUser && <CheckCheck className="w-3 h-3" />}
-                                    </div>
+                        <MessageItem
+                            key={msg.id}
+                            msg={msg}
+                            lang={lang}
+                            botLogoUrl={institutionLogoUrl}
+                            botName={institutionName}
+                            botFallback={institutionFallback}
+                            onSuggestionClick={onSuggestionClick}
+                            onSuggestionPrefill={onSuggestionPrefill}
+                        />
+                    ))}
+
+                    {isStreaming && !response && (
+                        <div className="flex justify-start">
+                            <div className="flex gap-2 max-w-[80%]">
+                                <BotAvatar
+                                    logoUrl={institutionLogoUrl}
+                                    name={institutionName}
+                                    fallback={institutionFallback}
+                                />
+                                <div className="rounded-2xl px-3 py-2 bg-muted text-foreground flex items-center gap-2">
+                                    <Loader2 className="w-3 h-3 animate-spin text-muted-foreground" />
+                                    <span className="text-sm text-muted-foreground">{labels.thinking}</span>
                                 </div>
                             </div>
                         </div>
-                    ))}
+                    )}
 
-                    {/* Streaming response */}
                     {response && (
                         <div className="flex justify-start">
                             <div className="flex gap-2 max-w-[80%]">
-                                <BotAvatar {...botProps} />
+                                <BotAvatar
+                                    logoUrl={institutionLogoUrl}
+                                    name={institutionName}
+                                    fallback={institutionFallback}
+                                />
                                 <div className="space-y-1">
                                     <div className="rounded-2xl px-3 py-2 bg-muted text-foreground">
-                                        <MessageContent lang={lang} content={response} isUser={false} />
+                                        <MessageContent
+                                            lang={lang}
+                                            content={response}
+                                            isUser={false}
+                                            isStreaming={isStreaming}
+                                            onSuggestionClick={onSuggestionClick}
+                                            onSuggestionPrefill={onSuggestionPrefill}
+                                        />
                                         {isStreaming && (
                                             <span className="inline-block w-1 h-3 ml-0.5 bg-primary animate-pulse align-middle" />
                                         )}
@@ -218,182 +292,5 @@ export const ChatMessages = ({
             )}
         </div>
     );
-};
-
-// ─── useSpeechRecognition ─────────────────────────────────────────────────────
-
-const langMap: Record<Lang, string> = {
-    ru: "ru-RU",
-    kk: "kk-KZ",
-    en: "en-US",
-};
-
-function useSpeechRecognition(onChange: (value: string) => void, lang: Lang) {
-    const [isListening, setIsListening] = React.useState(false);
-    const recognitionRef = useRef<any>(null);
-
-    const isSupported =
-        typeof window !== "undefined" &&
-        ("SpeechRecognition" in window || "webkitSpeechRecognition" in window);
-
-    const toggle = () => {
-        if (!isSupported) return;
-
-        if (isListening) {
-            recognitionRef.current?.stop();
-            setIsListening(false);
-            return;
-        }
-
-        const SpeechRecognition =
-            (window as any).SpeechRecognition ?? (window as any).webkitSpeechRecognition;
-
-        const recognition = new SpeechRecognition();
-        recognitionRef.current = recognition;
-
-        recognition.lang = langMap[lang] ?? "ru-RU";
-        recognition.continuous = false;
-        recognition.interimResults = false;
-
-        recognition.onstart = () => setIsListening(true);
-        recognition.onend = () => setIsListening(false);
-        recognition.onerror = (event: any) => {
-            logger.log("[SpeechRecognition] error", event.error, event);
-            setIsListening(false);
-        };
-
-        recognition.onresult = (event: any) => {
-            const transcript = event.results[0][0].transcript;
-            onChange(transcript);
-        };
-
-        logger.log("[SpeechRecognition] starting, lang:", recognition.lang);
-        recognition.start();
-    };
-
-    // Останавливаем при размонтировании
-    useEffect(() => {
-        return () => {
-            recognitionRef.current?.stop();
-        };
-    }, []);
-
-    return { isListening, isSupported, toggle };
-}
-
-// ─── ChatInput ────────────────────────────────────────────────────────────────
-
-interface ChatInputProps {
-    message: string;
-    isConnected: boolean;
-    isStreaming: boolean;
-    placeholder: string;
-    poweredByLabel: string;
-    readyLabel: string;
-    connectingLabel: string;
-    onChange: (value: string) => void;
-    onSend: () => void;
-    effectiveUserId?: string;
-    institutionId?: string;
-    lang?: Lang;
-}
-
-export const ChatInput = ({
-                              message,
-                              isConnected,
-                              isStreaming,
-                              placeholder,
-                              readyLabel,
-                              connectingLabel,
-                              onChange,
-                              onSend,
-                              effectiveUserId,
-                              institutionId,
-                              lang = "ru",
-                          }: ChatInputProps) => {
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const { isListening, isSupported, toggle } = useSpeechRecognition(onChange, lang);
-
-    useEffect(() => {
-        const el = textareaRef.current;
-        if (!el) return;
-        el.style.height = "auto";
-        el.style.height = `${el.scrollHeight}px`;
-    }, [message]);
-
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            onSend();
-        }
-    };
-
-    return (
-        <div className="flex-shrink-0 border-t border-border">
-            <div className="p-3">
-                <div className="relative">
-                    <Textarea
-                        ref={textareaRef}
-                        value={message}
-                        onChange={(e) => onChange(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        placeholder={placeholder}
-                        className={cn(
-                            "min-h-[40px] max-h-[100px] resize-none text-sm",
-                            isSupported ? "pr-16" : "pr-10"
-                        )}
-                        disabled={!isConnected || isStreaming}
-                    />
-
-                    {/* Кнопка микрофона */}
-                    {isSupported && (
-                        <Button
-                            size="icon"
-                            variant="ghost"
-                            type="button"
-                            className={cn(
-                                "absolute right-8 bottom-1 h-7 w-7 hover:bg-accent transition-colors",
-                                isListening && "text-red-500 hover:text-red-600"
-                            )}
-                            onClick={toggle}
-                            disabled={isStreaming}
-                        >
-                            {isListening
-                                ? <MicOff className="w-3 h-3" />
-                                : <Mic className="w-3 h-3 text-muted-foreground" />}
-                        </Button>
-                    )}
-
-                    {/* Кнопка отправки */}
-                    <Button
-                        size="icon"
-                        variant="ghost"
-                        className="absolute right-1 bottom-1 h-7 w-7 hover:bg-accent"
-                        onClick={onSend}
-                        disabled={!message.trim() || !isConnected || isStreaming}
-                    >
-                        {isStreaming
-                            ? <Loader2 className="w-3 h-3 animate-spin text-muted-foreground" />
-                            : <Send className="w-3 h-3 text-muted-foreground" />}
-                    </Button>
-                </div>
-            </div>
-
-            <CardFooter className="bg-muted border-t border-border p-2">
-                <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                    <span className={cn(
-                        "w-1 h-1 rounded-full",
-                        isConnected ? "bg-green-500 animate-ping" : "bg-muted-foreground"
-                    )} />
-                    {isConnected ? readyLabel : connectingLabel}
-                </span>
-            </CardFooter>
-
-            {process.env.NODE_ENV === "development" && effectiveUserId && (
-                <div className="text-[10px] text-muted-foreground px-3 pb-2">
-                    {effectiveUserId.substring(0, 8)}... | {institutionId?.substring(0, 8)}...
-                </div>
-            )}
-        </div>
-    );
-};
+});
+ChatMessages.displayName = "ChatMessages";

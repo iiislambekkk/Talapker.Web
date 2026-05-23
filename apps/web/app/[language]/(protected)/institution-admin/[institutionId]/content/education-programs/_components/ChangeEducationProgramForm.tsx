@@ -84,6 +84,8 @@ const changeProgramSchema = z.object({
     practiseBasesRu: z.string().optional(),
     practiseBasesEn: z.string().optional(),
     minimumUntScore: z.number().min(0),
+    minimumPlatnoeUntScore: z.number().min(0),
+    minimumGrantUntScore: z.number().min(0),
     code: z.string().min(1, "Program code is required"),
     studyForm: z.nativeEnum(StudyForm),
     durationYears: z.number().min(0.5).max(10),
@@ -219,6 +221,8 @@ export const ChangeEducationProgramForm = ({ program, institutionId, faculties }
             practiseBasesRu: program.practiseBases?.ru || "",
             practiseBasesEn: program.practiseBases?.en || "",
             minimumUntScore: program.minimumUntScore ?? 0,
+            minimumPlatnoeUntScore: program.minimumPlatnoeUntScore ?? 0,
+            minimumGrantUntScore: program.minimumGrantUntScore ?? 0,
             code: program.code || "",
             studyForm: convertedStudyForm,
             durationYears: program.durationYears ?? 4,
@@ -325,6 +329,8 @@ export const ChangeEducationProgramForm = ({ program, institutionId, faculties }
                     workPlaces: { kk: values.workPlacesKk || "", ru: values.workPlacesRu || "", en: values.workPlacesEn || "" },
                     practiseBases: { kk: values.practiseBasesKk || "", ru: values.practiseBasesRu || "", en: values.practiseBasesEn || "" },
                     minimumUntScore: values.minimumUntScore,
+                    minimumGrantUntScore: values.minimumGrantUntScore,
+                    minimumPlatnoeUntScore: values.minimumPlatnoeUntScore,
                     code: values.code,
                     studyForm: values.studyForm, // ← Отправляем как число (0, 1, 2, 3), НЕ СТРОКУ!
                     durationYears: values.durationYears,
@@ -442,9 +448,17 @@ export const ChangeEducationProgramForm = ({ program, institutionId, faculties }
                             </Field>
                         )} />
 
-                        <Controller name="minimumUntScore" control={form.control} render={({ field, fieldState }) => (
+                        <Controller name="minimumGrantUntScore" control={form.control} render={({ field, fieldState }) => (
                             <Field data-invalid={!!fieldState.error}>
-                                <FieldLabel><div className="flex items-center gap-1"><Star className="w-4 h-4" />ҰБТ балы</div></FieldLabel>
+                                <FieldLabel><div className="flex items-center gap-1"><Star className="w-4 h-4" />ҰБТ Грант балы</div></FieldLabel>
+                                <Input type="number" min={0} {...field} onChange={(e) => field.onChange(parseInt(e.target.value) || 0)} placeholder="70" />
+                                {fieldState.error && <FieldError>{fieldState.error.message}</FieldError>}
+                            </Field>
+                        )} />
+
+                        <Controller name="minimumPlatnoeUntScore" control={form.control} render={({ field, fieldState }) => (
+                            <Field data-invalid={!!fieldState.error}>
+                                <FieldLabel><div className="flex items-center gap-1"><Star className="w-4 h-4" />ҰБТ Платное балы</div></FieldLabel>
                                 <Input type="number" min={0} {...field} onChange={(e) => field.onChange(parseInt(e.target.value) || 0)} placeholder="70" />
                                 {fieldState.error && <FieldError>{fieldState.error.message}</FieldError>}
                             </Field>
